@@ -4,10 +4,11 @@ abstract type UFFDataset end
 """
     Dataset15
 
-A struct containing UFF Dataset 15 metadata.
+A struct containing UFF Dataset 15 (Nodes) data .
 
 **Fields**
 - `type::Symbol`: Data set type
+- `name::String`: Data set name
 - `node_ID::Vector{Int}`: Node label
 - `def_cs_num::Vector{Int}`: Definition coordinate system number
 - `disp_cs_num::Vector{Int}`: Displacement coordinate system number
@@ -17,6 +18,7 @@ A struct containing UFF Dataset 15 metadata.
 @show_data struct Dataset15 <: UFFDataset
     # Fields specific to Dataset15
     type::Symbol                     # Data set type
+    name::String                     # Data set name
     node_ID::Vector{Int}             # Record 1 - field 1
     def_cs_num::Vector{Int}          # Record 1 - field 2
     disp_cs_num::Vector{Int}         # Record 1 - field 3
@@ -29,16 +31,17 @@ A struct containing UFF Dataset 15 metadata.
         disp_cs_num = Int[],
         color = Int[],
         coords = Vector{Float64}[]
-    ) = new(:Dataset15, node_ID, def_cs_num, disp_cs_num, color, coords)
+    ) = new(:Dataset15, "Nodes", node_ID, def_cs_num, disp_cs_num, color, coords)
 end
 
 """
     Dataset18
 
-A struct containing UFF Dataset 18 metadata.
+A struct containing UFF Dataset 18 (Coordinate systems) data.
 
 **Fields**
 - `type::Symbol`: Data set type
+- `name::String`: Data set name
 - `cs_num::Int`: Coordinate system number
 - `cs_type::Int`: Coordinate system type
 - `ref_cs_num::Int`: Reference coordinate system number
@@ -51,7 +54,8 @@ A struct containing UFF Dataset 18 metadata.
 """
 @show_data struct Dataset18 <: UFFDataset
     # Fields specific to Dataset18
-    type::Symbol     # Data set type
+    type::Symbol                        # Data set type
+    name::String                        # Data set name
     cs_num::Vector{Int}                 # Record 1 - field 1
     cs_type::Vector{Int}                # Record 1 - field 2
     ref_cs_num::Vector{Int}             # Record 1 - field 3
@@ -72,16 +76,17 @@ A struct containing UFF Dataset 18 metadata.
         cs_origin = Vector{Vector{Float64}}[],
         cs_x = Vector{Vector{Float64}}[],
         cs_xz = Vector{Vector{Float64}}[]
-    ) = new(:Dataset18, cs_num, cs_type, ref_cs_num, color, method_def, cs_name, cs_origin, cs_x, cs_xz)
+    ) = new(:Dataset18, "Coordinate systems", cs_num, cs_type, ref_cs_num, color, method_def, cs_name, cs_origin, cs_x, cs_xz)
 end
 
 """
     Dataset55
 
-A struct containing UFF Dataset 55 metadata.
+A struct containing UFF Dataset 55 (Data at nodes) data.
 
 **Fields**
 - `type::Symbol`: Data set type
+- `name::String`: Data set name
 - `id1::String`: ID line 1
 - `id2::String`: ID line 2
 - `id3::String`: ID line 3
@@ -101,6 +106,7 @@ A struct containing UFF Dataset 55 metadata.
 @show_data struct Dataset55 <: UFFDataset
     # Fields specific to Dataset55
     type::Symbol       # Data set type
+    name::String       # Data set name
 
     #Record 1 to 5 fields
     id1::String        # Record 1 - field 1
@@ -182,17 +188,18 @@ A struct containing UFF Dataset 55 metadata.
             r8 = ()
         end
 
-        return new(:Dataset55, id1, id2, id3, id4, id5, model_type, analysis_type, data_charac, spec_dtype, dtype, ndv_per_node, r7, r8, node_number, data)
+        return new(:Dataset55, "Data at nodes", id1, id2, id3, id4, id5, model_type, analysis_type, data_charac, spec_dtype, dtype, ndv_per_node, r7, r8, node_number, data)
     end
 end
 
 """
     Dataset58
 
-A struct containing UFF Dataset 58 metadata.
+A struct containing UFF Dataset 58 (Function at nodal dof) data.
 
 **Fields**
 - `type::Symbol`: Data set type
+- `name::String`: Data set name
 - `id1::String`: ID line 1
 - `id2::String`: ID line 2
 - `id3::String`: ID line 3
@@ -243,6 +250,7 @@ A struct containing UFF Dataset 58 metadata.
 @show_data struct Dataset58 <: UFFDataset
     # Fields specific to Dataset58
     type::Symbol    # Data set type
+    name::String    # Data set name
     id1::String     # Record 1 - field 1
     id2::String     # Record 2 - field 1
     id3::String     # Record 3 - field 1
@@ -351,16 +359,17 @@ A struct containing UFF Dataset 58 metadata.
         z_axis_label = "",
         z_axis_unit_label = "",
         data = [],
-    ) = new(:Dataset58, id1, id2, id3, id4, id5, func_type, func_id, ver_num, load_case, resp_name, resp_node, resp_dir, ref_name, ref_node, ref_dir, ord_dtype, num_pts, abs_spacing_type, abs_min, abs_increment, zval, abs_spec_dtype, abs_len_unit_exp, abs_force_unit_exp, abs_temp_unit_exp, abs_axis_label, abs_axis_unit_label, ord_spec_dtype, ord_len_unit_exp, ord_force_unit_exp, ord_temp_unit_exp, ord_axis_label, ord_axis_unit_label, ord_denom_spec_dtype, ord_denom_len_unit_exp, ord_denom_force_unit_exp, ord_denom_temp_unit_exp, ord_denom_axis_label, ord_denom_axis_unit_label, z_spec_dtype, z_len_unit_exp, z_force_unit_exp, z_temp_unit_exp, z_axis_label, z_axis_unit_label, data)
+    ) = new(:Dataset58, "Function at nodal dof", id1, id2, id3, id4, id5, func_type, func_id, ver_num, load_case, resp_name, resp_node, resp_dir, ref_name, ref_node, ref_dir, ord_dtype, num_pts, abs_spacing_type, abs_min, abs_increment, zval, abs_spec_dtype, abs_len_unit_exp, abs_force_unit_exp, abs_temp_unit_exp, abs_axis_label, abs_axis_unit_label, ord_spec_dtype, ord_len_unit_exp, ord_force_unit_exp, ord_temp_unit_exp, ord_axis_label, ord_axis_unit_label, ord_denom_spec_dtype, ord_denom_len_unit_exp, ord_denom_force_unit_exp, ord_denom_temp_unit_exp, ord_denom_axis_label, ord_denom_axis_unit_label, z_spec_dtype, z_len_unit_exp, z_force_unit_exp, z_temp_unit_exp, z_axis_label, z_axis_unit_label, data)
 end
 
 """
     Dataset82
 
-A struct containing UFF Dataset 82 metadata.
+A struct containing UFF Dataset 82 (Tracelines) data.
 
 **Fields**
 - `type::Symbol`: Data set type
+- `name::String`: Data set name
 - `line_number::Int`: Trace line number
 - `num_nodes::Int`: Number of nodes defining trace line
 - `color::Int`: Color
@@ -370,6 +379,7 @@ A struct containing UFF Dataset 82 metadata.
 @show_data struct Dataset82 <: UFFDataset
     # Fields specific to Dataset82
     type::Symbol                     # Data set type
+    name::String                     # Data set name
     line_number::Int                 # Record 1 - field 1
     num_nodes::Int                   # Record 1 - field 2
     color::Int                       # Record 1 - field 3
@@ -382,16 +392,17 @@ A struct containing UFF Dataset 82 metadata.
         color = Int[],
         id_line = String[],
         line_nodes = Vector{Int}[]
-    ) = new(:Dataset82, line_number, num_nodes, color, id_line, line_nodes)
+    ) = new(:Dataset82, "Tracelines", line_number, num_nodes, color, id_line, line_nodes)
 end
 
 """
     Dataset151
 
-A struct containing UFF Dataset 151 metadata.
+A struct containing UFF Dataset 151 (Header) data.
 
 **Fields**
 - `type::Symbol`: Data set type
+- `name::String`: Data set name
 - `model_name::String`: model file name
 - `description::String`: model file description
 - `application::String`: Program which created the dataset
@@ -405,6 +416,7 @@ A struct containing UFF Dataset 151 metadata.
 @show_data struct Dataset151 <: UFFDataset
     # Fields specific to Dataset151
     type::Symbol                    # Data set type
+    name::String                    # Data set name
     model_name::String              # Record 1 - field 1
     description::String             # Record 2 - field 1
     application::String             # Record 3 - field 1
@@ -425,16 +437,17 @@ A struct containing UFF Dataset 151 metadata.
         datetime_last_saved = "",
         program = "",
         datetime_written = ""
-    ) = new(:Dataset151, model_name, description, application, datetime_created, version, file_type, datetime_last_saved, program, datetime_written)
+    ) = new(:Dataset151, "Header", model_name, description, application, datetime_created, version, file_type, datetime_last_saved, program, datetime_written)
 end
 
 """
     Dataset164
 
-A struct containing UFF Dataset 164 metadata.
+A struct containing UFF Dataset 164 (Units) data.
 
 **Fields**
 - `type::Symbol`: Data set type
+- `name::String`: Data set name
 - `units::Int`: Units code
 - `description::String`: Units description
 - `temperature_mode::Int`: Temperature mode
@@ -443,6 +456,7 @@ A struct containing UFF Dataset 164 metadata.
 @show_data struct Dataset164 <: UFFDataset
     # Fields specific to Dataset164
     type::Symbol                        # Data set type
+    name::String                        # Data set name
     units::Int                          # Record 1 - field 1
     description::String                 # Record 1 - field 2
     temperature_mode::Int               # Record 1 - field 3
@@ -453,16 +467,17 @@ A struct containing UFF Dataset 164 metadata.
         description = "",
         temperature_mode = 0,
         conversion_factor = [1., 1., 1., 0.]
-    ) = new(:Dataset164, units, description, temperature_mode, conversion_factor)
+    ) = new(:Dataset164, "Units",units, description, temperature_mode, conversion_factor)
 end
 
 """
     Dataset2411
 
-A struct containing UFF Dataset 2411 metadata.
+A struct containing UFF Dataset 2411 (Nodes - Double precision) data.
 
 **Fields**
 - `type::Symbol`: Data set type
+- `name::String`: Data set name
 - `nodes_ID::Vector{Int}`: Node IDs
 - `coord_system::Vector{Int}`: Coordinate system IDs
 - `disp_coord_system::Vector{Int}`: Displacement coordinate system IDs
@@ -472,6 +487,7 @@ A struct containing UFF Dataset 2411 metadata.
 @show_data struct Dataset2411 <: UFFDataset
     # Fields specific to Dataset2411
     type::Symbol                    # Data set type
+    name::String                    # Data set name
     nodes_ID::Vector{Int}           # Record 1 - field 1
     coord_system::Vector{Int}       # Record 1 - field 2
     disp_coord_system::Vector{Int}  # Record 1 - field 3
@@ -484,16 +500,17 @@ A struct containing UFF Dataset 2411 metadata.
         disp_coord_system = Int[],
         color = Int[],
         node_coords = Matrix{Float64}[]
-    ) = new(:Dataset2411, nodes_ID, coord_system, disp_coord_system, color, node_coords)
+    ) = new(:Dataset2411, "Nodes - Double precision",nodes_ID, coord_system, disp_coord_system, color, node_coords)
 end
 
 """
     Dataset2412
 
-A struct containing UFF Dataset 2412 metadata.
+A struct containing UFF Dataset 2412 (Elements) data.
 
 **Fields**
 - `type::Symbol`: Data set type
+- `name::String`: Data set name
 - `elements_ID::Vector{Int}`: Element label
 - `fe_descriptor_id::Vector{Int}`: Finite element descriptor ID
 - `phys_property::Vector{Int}`: Physical property table number
@@ -506,6 +523,7 @@ A struct containing UFF Dataset 2412 metadata.
 @show_data struct Dataset2412 <: UFFDataset
     # Fields specific to Dataset2412
     type::Symbol                        # Data set type
+    name::String                        # Data set name
     elements_ID::Vector{Int}            # Record 1 - field 1
     fe_descriptor_id::Vector{Int}       # Record 1 - field 2
     phys_property::Vector{Int}          # Record 1 - field 3
@@ -524,16 +542,17 @@ A struct containing UFF Dataset 2412 metadata.
         nodes_per_elt = Int[],
         connectivity = Vector{Vector{Int}}[],
         beam_info = Vector{Vector{Int}}[]
-    ) = new(:Dataset2412, elements_ID, fe_descriptor_id, phys_property, mat_property, color, nodes_per_elt, connectivity, beam_info)
+    ) = new(:Dataset2412, "Elements", elements_ID, fe_descriptor_id, phys_property, mat_property, color, nodes_per_elt, connectivity, beam_info)
 end
 
 """
     Dataset2414
 
-A struct containing UFF Dataset 2414 metadata.
+A struct containing UFF Dataset 2414 (Analysis data) data.
 
 **Fields**
 - `type::Symbol`: Data set type
+- `name::String`: Data set name
 - `analysis_dlabel::Int`: Analysyis data label
 - `analysis_dname::String`: Analysis data name
 - `dataset_location::Int`: Dataset location
@@ -555,7 +574,8 @@ A struct containing UFF Dataset 2414 metadata.
 """
 @show_data struct Dataset2414 <: UFFDataset
     # Fields specific to Dataset2414
-    type::Symbol             # Data set type
+    type::Symbol          # Data set type
+    name::String          # Data set name
     analysis_dlabel::Int  # Record 1 - field 1
     analysis_dname::String   # Record 2 - field 1
     dataset_location::Int    # Record 3 - field 1
@@ -808,6 +828,6 @@ A struct containing UFF Dataset 2414 metadata.
             end
         end
 
-        return new(:Dataset2414, analysis_dlabel, analysis_dname, dataset_location, id_line1, id_line2, id_line3, id_line4, id_line5, model_type, analysis_type, data_characteristic, result_type, dtype, num_data_values, int_analysis_type, real_analysis_type, data_info, data_value)
+        return new(:Dataset2414, "Analysis data", analysis_dlabel, analysis_dname, dataset_location, id_line1, id_line2, id_line3, id_line4, id_line5, model_type, analysis_type, data_characteristic, result_type, dtype, num_data_values, int_analysis_type, real_analysis_type, data_info, data_value)
     end
 end
