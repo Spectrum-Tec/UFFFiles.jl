@@ -1,5 +1,5 @@
 module UFFFiles
-    using Printf
+    using FileIO, Printf
 
     # Exported Types
     export Dataset15, Dataset18, Dataset55, Dataset58, Dataset82,

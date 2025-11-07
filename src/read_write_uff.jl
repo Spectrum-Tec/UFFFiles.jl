@@ -28,6 +28,8 @@ function readuff(filename::String)
     return data
 end
 
+fileio_load(file::File{FileIO.format"UFF"}) = readuff(file.filename)
+
 """
     writeuff(filename::String, data::Vector{UFFDataset})
 
@@ -50,6 +52,8 @@ function writeuff(filename::String, data)
         end
     end
 end
+
+fileio_save(file::File{format"UFF"}, data) = writeuff(file.filename, data)
 
 ## Functions for reading and writing UFF datasets
 """
