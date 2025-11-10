@@ -1,4 +1,117 @@
 """
+    Dataset55
+
+A struct containing UFF Dataset 55 (Data at nodes) data.
+
+**Fields**
+- `type::Symbol`: Data set type
+- `name::String`: Data set name
+- `id1::String`: ID line 1
+- `id2::String`: ID line 2
+- `id3::String`: ID line 3
+- `id4::String`: ID line 4
+- `id5::String`: ID line 5
+- `model_type::Int`: Model type
+- `analysis_type::Int`: Analysis type
+- `data_charac::Int`: Data characterization
+- `spec_dtype::Int`: Specific data type
+- `dtype::Int`: Data type
+- `ndv_per_node::Int`: Number of data values per node
+- `r7::NamedTuple`: Analysis type specific
+- `r8::NamedTuple`: Analysis type specific
+- `node_number::Vector{Int}`: Node numbers
+- `data::Matrix{Union{Float64, ComplexF64}}`: Data values
+"""
+@show_data struct Dataset55 <: UFFDataset
+    # Fields specific to Dataset55
+    type::Symbol       # Data set type
+    name::String       # Data set name
+
+    #Record 1 to 5 fields
+    id1::String        # Record 1 - field 1
+    id2::String        # Record 2 - field 1
+    id3::String        # Record 3 - field 1
+    id4::String        # Record 4 - field 1
+    id5::String        # Record 5 - field 1
+
+    # Record 6 fields
+    model_type::Int    # Record 6 - field 1
+    analysis_type::Int # Record 6 - field 2
+    data_charac::Int   # Record 6 - field 3
+    spec_dtype::Int    # Record 6 - field 4
+    dtype::Int         # Record 6 - field 5
+    ndv_per_node::Int  # Record 6 - field 6
+
+    # Record 7 fields (Analysis type specific)
+    r7::NamedTuple      # Record 7 - field 1
+
+    # Record 8 fields (Analysis type specific)
+    r8::NamedTuple  # Record 8 - fields 1 to 4
+
+    # Record 9 fields
+    node_number::Vector{Int}      # Record 9 - field 1
+
+    # Record 10 fields
+    data::AbstractMatrix  # Record 10 - fields 1 to ndv_per_node
+
+    function Dataset55(
+        id1 = "",
+        id2 = "",
+        id3 = "",
+        id4 = "",
+        id5 = "",
+        model_type = 0,
+        analysis_type = 0,
+        data_charac = 0,
+        spec_dtype = 0,
+        dtype = 0,
+        ndv_per_node = 0,
+        r7_raw = Int[],
+        r8_raw = Float64[],
+        node_number = Int[],
+        data = Array{Union{Float64, ComplexF64}}(undef, 0, 0)
+    )
+
+        # Parse r7 and r8 based on analysis_type
+        if !isempty(r7_raw) && !isempty(r8_raw)
+            if analysis_type == 0 # Unknown
+                r7 = (field1 = r7_raw[1], field2 = r7_raw[2], ID_number = r7_raw[3])
+                r8 = (field1 = r8_raw[1],)
+
+            elseif analysis_type == 1 # Static
+                r7 = (field1 = r7_raw[1], field2 = r7_raw[2], load_case_num = r7_raw[3])
+                r8 = (field1 = r8_raw[1],)
+
+            elseif analysis_type == 2 # Normal Mode
+                r7 = (field1 = r7_raw[1], field2 = r7_raw[2], load_case = r7_raw[3], mode_number = r7_raw[4])
+                r8 = (freq = r8_raw[1], modal_mass = r8_raw[2], modal_visc_dr = r8_raw[3], modal_hyst_dr = r8_raw[4])
+
+            elseif analysis_type == 3 # Complex Eigenvalue
+                r7 = (field1 = r7_raw[1], field2 = r7_raw[2], load_case_num = r7_raw[3], mode_number = r7_raw[4])
+                r8 = (real_eigval = r8_raw[1], imag_eigval = r8_raw[2], real_modalA = r8_raw[3], imag_modalA = r8_raw[4], real_modalB = r8_raw[5], imag_modalB = r8_raw[6])
+
+            elseif analysis_type == 4 # Transient
+                r7 = (field1 = r7_raw[1], field2 = r7_raw[2], load_case_num = r7_raw[3], time_step_num = r7_raw[4])
+                r8 = (time = r8_raw[1],)
+
+            elseif analysis_type == 5 # Frequency Response
+                r7 = (field1 = r7_raw[1], field2 = r7_raw[2], load_case_num = r7_raw[3], freq_step_num = r7_raw[4])
+                r8 = (freq = r8_raw[1],)
+
+            elseif analysis_type == 6 # Buckling
+                r7 = (field1 = r7_raw[1], field2 = r7_raw[2], load_case_num = r7_raw[3])
+                r8 = (eigval = r8_raw[1],)
+            end
+        else
+            r7 = ()
+            r8 = ()
+        end
+
+        return new(:Dataset55, "Data at nodes", id1, id2, id3, id4, id5, model_type, analysis_type, data_charac, spec_dtype, dtype, ndv_per_node, r7, r8, node_number, data)
+    end
+end
+
+"""
 Universal Dataset Number: 55
 
 **Name:   Data at Nodes**
@@ -388,7 +501,7 @@ function parse_dataset55(block)
 end
 
 """
-    write_dataset55(dataset::Dataset55) -> Vector{String}
+    write_dataset(dataset::Dataset55) -> Vector{String}
 
 Write a UFF Dataset 55 (Data at Nodes) to a vector of strings.
 
@@ -398,7 +511,7 @@ Write a UFF Dataset 55 (Data at Nodes) to a vector of strings.
 **Output**
 - `Vector{String}`: Vector of formatted strings representing the UFF file content
 """
-function write_dataset55(dataset::Dataset55)
+function write_dataset(dataset::Dataset55)
     lines = String[]
 
     # Write header

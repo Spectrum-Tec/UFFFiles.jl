@@ -1,4 +1,34 @@
 """
+    Dataset164
+
+A struct containing UFF Dataset 164 (Units) data.
+
+**Fields**
+- `type::Symbol`: Data set type
+- `name::String`: Data set name
+- `units::Int`: Units code
+- `description::String`: Units description
+- `temperature_mode::Int`: Temperature mode
+- `conversion_factor::Vector{Float64}`: Units factors for converting to SI units
+"""
+@show_data struct Dataset164 <: UFFDataset
+    # Fields specific to Dataset164
+    type::Symbol                        # Data set type
+    name::String                        # Data set name
+    units::Int                          # Record 1 - field 1
+    description::String                 # Record 1 - field 2
+    temperature_mode::Int               # Record 1 - field 3
+    conversion_factor::Vector{Float64}  # Record 2 - fields 1 to 4
+
+    Dataset164(
+        units = 1,
+        description = "",
+        temperature_mode = 0,
+        conversion_factor = [1., 1., 1., 0.]
+    ) = new(:Dataset164, "Units",units, description, temperature_mode, conversion_factor)
+end
+
+"""
 Universal Dataset Number: 164
 
 **Name:   Units**
@@ -48,7 +78,7 @@ function parse_dataset164(block)
 end
 
 """
-    write_dataset164(dataset::Dataset164) -> Vector{String}
+    write_dataset(dataset::Dataset164) -> Vector{String}
 
 Write a UFF Dataset 164 (Units) to a vector of strings.
 
@@ -58,7 +88,7 @@ Write a UFF Dataset 164 (Units) to a vector of strings.
 **Output**
 - `Vector{String}`: Vector of formatted strings representing the UFF file content
 """
-function write_dataset164(dataset::Dataset164)
+function write_dataset(dataset::Dataset164)
     lines = String[]
 
     # Write header

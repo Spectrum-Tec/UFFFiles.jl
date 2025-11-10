@@ -1,4 +1,37 @@
 """
+    Dataset15
+
+A struct containing UFF Dataset 15 (Nodes) data .
+
+**Fields**
+- `type::Symbol`: Data set type
+- `name::String`: Data set name
+- `node_ID::Vector{Int}`: Node label
+- `def_cs_num::Vector{Int}`: Definition coordinate system number
+- `disp_cs_num::Vector{Int}`: Displacement coordinate system number
+- `color::Vector{Int}`: Color
+- `coords::Vector{Vector{Float64}}`: 3D coordinates of node in the definition system
+"""
+@show_data struct Dataset15 <: UFFDataset
+    # Fields specific to Dataset15
+    type::Symbol                     # Data set type
+    name::String                     # Data set name
+    node_ID::Vector{Int}             # Record 1 - field 1
+    def_cs_num::Vector{Int}          # Record 1 - field 2
+    disp_cs_num::Vector{Int}         # Record 1 - field 3
+    color::Vector{Int}               # Record 1 - field 4
+    coords::Vector{Vector{Float64}}  # Record 1 - fields 5 to 7
+
+    Dataset15(
+        node_ID = Int[],
+        def_cs_num = Int[],
+        disp_cs_num = Int[],
+        color = Int[],
+        coords = Vector{Float64}[]
+    ) = new(:Dataset15, "Nodes", node_ID, def_cs_num, disp_cs_num, color, coords)
+end
+
+"""
 Universal Dataset Number: 15
 
 **Name:   Nodes**
@@ -47,7 +80,7 @@ function parse_dataset15(block)
 end
 
 """
-    write_dataset15(dataset::Dataset15) -> Vector{String}
+    write_dataset(dataset::Dataset15) -> Vector{String}
 
 Write a UFF Dataset 15 (Nodes) to a vector of strings.
 
@@ -57,7 +90,7 @@ Write a UFF Dataset 15 (Nodes) to a vector of strings.
 **Output**
 - `Vector{String}`: Vector of formatted strings representing the UFF file content
 """
-function write_dataset15(dataset::Dataset15)
+function write_dataset(dataset::Dataset15)
     lines = String[]
 
     # Write header

@@ -1,4 +1,46 @@
 """
+    Dataset2412
+
+A struct containing UFF Dataset 2412 (Elements) data.
+
+**Fields**
+- `type::Symbol`: Data set type
+- `name::String`: Data set name
+- `elements_ID::Vector{Int}`: Element label
+- `fe_descriptor_id::Vector{Int}`: Finite element descriptor ID
+- `phys_property::Vector{Int}`: Physical property table number
+- `mat_property::Vector{Int}`: Material property table number
+- `color::Vector{Int}`: Color
+- `nodes_per_elt::Vector{Int}`: Number of nodes per element
+- `connectivity::Vector{Vector{Int}}`: Element connectivity (node labels)
+- `beam_info::Vector{Vector{Int}}`: Beam element information
+"""
+@show_data struct Dataset2412 <: UFFDataset
+    # Fields specific to Dataset2412
+    type::Symbol                        # Data set type
+    name::String                        # Data set name
+    elements_ID::Vector{Int}            # Record 1 - field 1
+    fe_descriptor_id::Vector{Int}       # Record 1 - field 2
+    phys_property::Vector{Int}          # Record 1 - field 3
+    mat_property::Vector{Int}           # Record 1 - field 4
+    color::Vector{Int}                  # Record 1 - field 5
+    nodes_per_elt::Vector{Int}          # Record 1 - field 6
+    connectivity::Vector{Vector{Int}}   # Record 2/3 - node labels
+    beam_info::Vector{Vector{Int}}      # Record 2 - beam elements info
+
+    Dataset2412(
+        elements_ID = Int[],
+        fe_descriptor_id = Int[],
+        phys_property = Int[],
+        mat_property = Int[],
+        color = Int[],
+        nodes_per_elt = Int[],
+        connectivity = Vector{Vector{Int}}[],
+        beam_info = Vector{Vector{Int}}[]
+    ) = new(:Dataset2412, "Elements", elements_ID, fe_descriptor_id, phys_property, mat_property, color, nodes_per_elt, connectivity, beam_info)
+end
+
+"""
 Universal Dataset Number: 2412
 
 **Name:   Elements**
@@ -264,7 +306,18 @@ function parse_dataset2412(block)
     )
 end
 
-function write_dataset2412(dataset::Dataset2412)
+"""
+    write_dataset(dataset::Dataset2412) -> Vector{String}
+
+Write a UFF Dataset 2412 (Elements) to a vector of strings.
+
+**Input**
+- `dataset::Dataset2412`: The dataset structure containing element information
+
+**Output**
+- `Vector{String}`: Vector of formatted strings representing the UFF file content
+"""
+function write_dataset(dataset::Dataset2412)
     lines = String[]
 
     # Write header

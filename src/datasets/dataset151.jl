@@ -1,4 +1,49 @@
 """
+    Dataset151
+
+A struct containing UFF Dataset 151 (Header) data.
+
+**Fields**
+- `type::Symbol`: Data set type
+- `name::String`: Data set name
+- `model_name::String`: model file name
+- `description::String`: model file description
+- `application::String`: Program which created the dataset
+- `datetime_created::DateTime`: dataset creation date and time
+- `version::String`: version from dataset
+- `file_type::Int`: file type
+- `datetime_last_saved::DateTime`: dataset last saved date and time
+- `program::String`: program which created uff file
+- `datetime_written::DateTime`: uff file written date and time
+"""
+@show_data struct Dataset151 <: UFFDataset
+    # Fields specific to Dataset151
+    type::Symbol                    # Data set type
+    name::String                    # Data set name
+    model_name::String              # Record 1 - field 1
+    description::String             # Record 2 - field 1
+    application::String             # Record 3 - field 1
+    datetime_created::String        # Record 4 - fields 1 and 2
+    version::String                 # Record 4 - fields 3 and 4
+    file_type::Int                  # Record 4 - field 5
+    datetime_last_saved::String     # Record 5 - fields 1 and 2
+    program::String                 # Record 6 - field 1
+    datetime_written::String        # Record 7 - fields 1 and 2
+
+    Dataset151(
+        model_name = "",
+        description = "",
+        application = "",
+        datetime_created = "",
+        version = "",
+        file_type = 0,
+        datetime_last_saved = "",
+        program = "",
+        datetime_written = ""
+    ) = new(:Dataset151, "Header", model_name, description, application, datetime_created, version, file_type, datetime_last_saved, program, datetime_written)
+end
+
+"""
 Universal Dataset Number: 151
 
 **Name:   Header**
@@ -65,7 +110,18 @@ function parse_dataset151(block)
     )
 end
 
-function write_dataset151(dataset::Dataset151)
+"""
+    write_dataset(dataset::Dataset151) -> Vector{String}
+
+Write a UFF Dataset 151 (Header) to a vector of strings.
+
+**Input**
+- `dataset::Dataset151`: The dataset structure containing header information
+
+**Output**
+- `Vector{String}`: Vector of formatted strings representing the UFF file content
+"""
+function write_dataset(dataset::Dataset151)
     lines = String[]
 
     # Write header

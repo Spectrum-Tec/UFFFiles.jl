@@ -33,7 +33,9 @@ function readuff(filename::String)
         end
 
         # Parse the block based on its dataset type
-        data[i] = parse_datasets(dtype, block)
+        # https://stackoverflow.com/questions/34016768/julia-invoke-a-function-by-a-given-string/34023458#34023458
+        parse_dataset = getfield(UFFFiles, Symbol("parse_dataset", dtype))
+        data[i] = parse_dataset(block)
         i += 1
     end
 
@@ -56,7 +58,7 @@ written.
 function writeuff(filename::String, data)
     open(filename, "w") do io
         for dataset in data
-            lines = write_datasets(dataset)
+            lines = write_dataset(dataset)
 
             # Write the formatted lines to the file
             for line in lines
@@ -68,87 +70,3 @@ end
 
 # FileIO integration
 fileio_save(file::File{format"UFF"}, data) = writeuff(file.filename, data)
-
-## Functions for reading and writing UFF datasets
-"""
-    parse_datasets(dtype::String, block::Vector{String}) -> UFFDataset
-
-Parses a block of UFF data based on the dataset type.
-
-**Input**
-- `dtype::String`: The dataset type identifier (e.g., "15", "18", etc.).
-- `block::Vector{String}`: The block of data as a vector of strings.
-
-**Output**
-- `dataset::UFFDataset`: The parsed dataset as an instance of the corresponding UFFDataset subtype.
-"""
-function parse_datasets(dtype, block)
-    if dtype == "15"
-        # Parse Dataset15
-        return parse_dataset15(block)
-    elseif dtype == "18"
-        # Parse Dataset18
-        return parse_dataset18(block)
-    elseif dtype == "55"
-        # Parse Dataset55
-        return parse_dataset55(block)
-    elseif dtype == "58"
-        # Parse Dataset58
-        return parse_dataset58(block)
-    elseif dtype == "82"
-        # Parse Dataset82
-        return parse_dataset82(block)
-    elseif dtype == "151"
-        # Parse Dataset151
-        return parse_dataset151(block)
-    elseif dtype == "164"
-        # Parse Dataset164
-        return parse_dataset164(block)
-    elseif dtype == "2411"
-        # Parse Dataset2411
-        return parse_dataset2411(block)
-    elseif dtype == "2412"
-        # Parse Dataset2412
-        return parse_dataset2412(block)
-    elseif dtype == "2414"
-        # Parse Dataset2414
-        return parse_dataset2414(block)
-    end
-end
-
-"""
-    write_dataset(dataset::UFFDataset) -> Vector{String}
-
-Writes a UFF dataset to a vector of formatted strings based on its type.
-
-**Input**
-- `dataset::UFFDataset`: The dataset to be written.
-
-**Output**
-- `Vector{String}`: Vector of formatted strings representing the UFF file content.
-"""
-function write_datasets(dataset::UFFDataset)
-    if dataset isa Dataset15
-        return write_dataset15(dataset)
-    elseif dataset isa Dataset18
-        return write_dataset18(dataset)
-    elseif dataset isa Dataset55
-        return write_dataset55(dataset)
-    elseif dataset isa Dataset58
-        return write_dataset58(dataset)
-    elseif dataset isa Dataset82
-        return write_dataset82(dataset)
-    elseif dataset isa Dataset151
-        return write_dataset151(dataset)
-    elseif dataset isa Dataset164
-        return write_dataset164(dataset)
-    elseif dataset isa Dataset2411
-        return write_dataset2411(dataset)
-    elseif dataset isa Dataset2412
-        return write_dataset2412(dataset)
-    elseif dataset isa Dataset2414
-        return write_dataset2414(dataset)
-    else
-        throw("Unsupported dataset type: $(typeof(dataset))")
-    end
-end

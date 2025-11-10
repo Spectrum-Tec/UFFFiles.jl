@@ -1,4 +1,37 @@
 """
+    Dataset2411
+
+A struct containing UFF Dataset 2411 (Nodes - Double precision) data.
+
+**Fields**
+- `type::Symbol`: Data set type
+- `name::String`: Data set name
+- `nodes_ID::Vector{Int}`: Node IDs
+- `coord_system::Vector{Int}`: Coordinate system IDs
+- `disp_coord_system::Vector{Int}`: Displacement coordinate system IDs
+- `color::Vector{Int}`: Color codes
+- `node_coords::Matrix{Float64}`: Node coordinates
+"""
+@show_data struct Dataset2411 <: UFFDataset
+    # Fields specific to Dataset2411
+    type::Symbol                    # Data set type
+    name::String                    # Data set name
+    nodes_ID::Vector{Int}           # Record 1 - field 1
+    coord_system::Vector{Int}       # Record 1 - field 2
+    disp_coord_system::Vector{Int}  # Record 1 - field 3
+    color::Vector{Int}              # Record 1 - field 4
+    node_coords::Matrix{Float64}    # Record 2 - fields 1 to 3
+
+    Dataset2411(
+        nodes_ID = Int[],
+        coord_system = Int[],
+        disp_coord_system = Int[],
+        color = Int[],
+        node_coords = Matrix{Float64}[]
+    ) = new(:Dataset2411, "Nodes - Double precision",nodes_ID, coord_system, disp_coord_system, color, node_coords)
+end
+
+"""
 Universal Dataset Number: 2411
 
 **Name:   Nodes - Double Precision**
@@ -41,7 +74,18 @@ function parse_dataset2411(block)
     )
 end
 
-function write_dataset2411(dataset::Dataset2411)
+"""
+    write_dataset(dataset::Dataset2411) -> Vector{String}
+
+Write a UFF Dataset 2411 (Nodes - Double Precision) to a vector of strings.
+
+**Input**
+- `dataset::Dataset2411`: The dataset structure containing node information
+
+**Output**
+- `Vector{String}`: Vector of formatted strings representing the UFF file content
+"""
+function write_dataset(dataset::Dataset2411)
     # Follow the docstring format for UFF 2411 (Nodes - Double Precision)
     # Record 1: 4I10 (node label, export CS, displacement CS, color)
     # Record 2: 1P3D25.16 (x, y, z coordinates)

@@ -6,9 +6,11 @@ format:
     number-sections: false
 ---
 
-## v0.3.0
+## v0.2.1
 
+**Internals changes only**
 - Skipping unsupported dataset blocks during UFF file parsing, with a warning message instead of throwing an error.
+- Use multiple dispatch to write dataset blocks in a more modular way.
 
 ## v0.2.0
 

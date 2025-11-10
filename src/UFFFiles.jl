@@ -1,7 +1,11 @@
 module UFFFiles
     using FileIO, Printf
 
+    # Base UFFDataset abstract type
+    abstract type UFFDataset end
+
     # Exported Types
+    # Types for UFF datasets -- see https://www.ceas3.uc.edu/sdrluff/all_files.php
     export Dataset15, Dataset18, Dataset55, Dataset58, Dataset82,
            Dataset151, Dataset164, Dataset2411, Dataset2412, Dataset2414
 
@@ -14,8 +18,6 @@ module UFFFiles
 
     # Include files
     include("uff_utils.jl")
-    include("uff_types.jl")
-    include("uff_helpers.jl")
 
     # Include datasets read/write functions
     include("datasets/dataset15.jl")
@@ -29,4 +31,7 @@ module UFFFiles
     include("datasets/dataset2412.jl")
     include("datasets/dataset2414.jl")
     include("read_write_uff.jl")
+
+    # Include helper functions
+    include("uff_helpers.jl")
 end

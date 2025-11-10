@@ -1,4 +1,37 @@
 """
+    Dataset82
+
+A struct containing UFF Dataset 82 (Tracelines) data.
+
+**Fields**
+- `type::Symbol`: Data set type
+- `name::String`: Data set name
+- `line_number::Int`: Trace line number
+- `num_nodes::Int`: Number of nodes defining trace line
+- `color::Int`: Color
+- `id_line::String`: Identification line
+- `line_nodes::Vector{Int}`: Nodes defining trace line
+"""
+@show_data struct Dataset82 <: UFFDataset
+    # Fields specific to Dataset82
+    type::Symbol                     # Data set type
+    name::String                     # Data set name
+    line_number::Int                 # Record 1 - field 1
+    num_nodes::Int                   # Record 1 - field 2
+    color::Int                       # Record 1 - field 3
+    id_line::String                  # Record 2 - field 1
+    line_nodes::Vector{Int}          # Record 3 - field 1
+
+    Dataset82(
+        line_number = Int[],
+        num_nodes = Int[],
+        color = Int[],
+        id_line = String[],
+        line_nodes = Vector{Int}[]
+    ) = new(:Dataset82, "Tracelines", line_number, num_nodes, color, id_line, line_nodes)
+end
+
+"""
 Universal Dataset Number: 82
 
 **Name:   Tracelines**
@@ -47,7 +80,7 @@ function parse_dataset82(block)
 end
 
 """
-    write_dataset82(dataset::Dataset82) -> Vector{String}
+    write_dataset(dataset::Dataset82) -> Vector{String}
 
 Write a UFF Dataset 82 (Tracelines) to a vector of strings.
 
@@ -57,7 +90,7 @@ Write a UFF Dataset 82 (Tracelines) to a vector of strings.
 **Output**
 - `Vector{String}`: Vector of formatted strings representing the UFF file content
 """
-function write_dataset82(dataset::Dataset82)
+function write_dataset(dataset::Dataset82)
     lines = String[]
 
     # Write header

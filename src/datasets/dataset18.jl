@@ -1,4 +1,49 @@
 """
+    Dataset18
+
+A struct containing UFF Dataset 18 (Coordinate systems) data.
+
+**Fields**
+- `type::Symbol`: Data set type
+- `name::String`: Data set name
+- `cs_num::Int`: Coordinate system number
+- `cs_type::Int`: Coordinate system type
+- `ref_cs_num::Int`: Reference coordinate system number
+- `color::Int`: Color
+- `method_def::Int`: Method of definition
+- `cs_name::String`: Coordinate system name
+- `cs_origin::Vector{Float64}`: Origin of new system specified in reference system
+- `cs_x::Vector{Float64}`: Point on +x axis of the new system specified in reference system
+- `cs_xz::Vector{Float64}`: Point on +xz plane of the new system specified in reference system
+"""
+@show_data struct Dataset18 <: UFFDataset
+    # Fields specific to Dataset18
+    type::Symbol                        # Data set type
+    name::String                        # Data set name
+    cs_num::Vector{Int}                 # Record 1 - field 1
+    cs_type::Vector{Int}                # Record 1 - field 2
+    ref_cs_num::Vector{Int}             # Record 1 - field 3
+    color::Vector{Int}                  # Record 1 - field 4
+    method_def::Vector{Int}             # Record 1 - field 5
+    cs_name::Vector{String}             # Record 2 - field 1
+    cs_origin::Vector{Vector{Float64}}  # Record 3 - fields 1 to 3
+    cs_x::Vector{Vector{Float64}}       # Record 3 - fields 4 to 6
+    cs_xz::Vector{Vector{Float64}}      # Record 3 - fields 7 to 9
+
+    Dataset18(
+        cs_num = Int[],
+        cs_type = Int[],
+        ref_cs_num = Int[],
+        color = Int[],
+        method_def = Int[],
+        cs_name = String[],
+        cs_origin = Vector{Vector{Float64}}[],
+        cs_x = Vector{Vector{Float64}}[],
+        cs_xz = Vector{Vector{Float64}}[]
+    ) = new(:Dataset18, "Coordinate systems", cs_num, cs_type, ref_cs_num, color, method_def, cs_name, cs_origin, cs_x, cs_xz)
+end
+
+"""
 Universal Dataset Number: 18
 
 **Name:   Coordinate Systems**
@@ -78,7 +123,18 @@ function parse_dataset18(block)
     )
 end
 
-function write_dataset18(dataset::Dataset18)
+"""
+    write_dataset(dataset::Dataset18) -> Vector{String}
+
+Write a UFF Dataset 18 (Coordinate Systems) to a vector of strings.
+
+**Input**
+- `dataset::Dataset18`: The dataset structure containing coordinate system information
+
+**Output**
+- `Vector{String}`: Vector of formatted strings representing the UFF file content
+"""
+function write_dataset(dataset::Dataset18)
     lines = String[]
 
     # Header
