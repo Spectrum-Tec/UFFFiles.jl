@@ -942,16 +942,66 @@ function parse_dataset58(block)
             ComplexF64[], Float64
     end
 
+    # for dv in data_values
+    #      entries = split(dv)
+    #      _data = parse.(dtype, strip.(entries))
+    #      if ord_dtype < 5
+    #          append!(data, _data)
+    #      elseif ord_dtype == 5
+    #         append!(data, complex.(_data[1:2:end], _data[2:2:end]))
+    #      elseif ord_dtype == 6
+    #         append!(data, complex.(_data[1:2:end], _data[2:2:end]))
+    #      end
+    # end
+
     for dv in data_values
-         entries = split(dv)
-         _data = parse.(dtype, strip.(entries))
-         if ord_dtype < 5
-             append!(data, _data)
-         elseif ord_dtype == 5
+        # Check if line contains spaces (standard format) or fixed-width fields (UFF58 specification)
+        if occursin(r"\s+", strip(dv)) && !occursin(r"^[\s\-\+\d\.E]+$", dv)
+            # Format with spaces - use standard split
+            entries = split(dv)
+            _data = parse.(dtype, strip.(entries))
+        else
+            # Format without spaces - use fixed-width positions according to UFF58 specification
+            entries = String[]
+            line = dv
+
+            if ord_dtype == 2 || ord_dtype == 5
+                # Single precision: E13.5 format (13 characters per value)
+                field_width = 13
+            elseif ord_dtype == 4 || ord_dtype == 6
+                # Double precision: E20.12 format (20 characters per value)
+                field_width = 20
+            end
+
+            # Extract fixed-width fields
+            pos = 1
+            while pos <= length(line)
+                if pos + field_width - 1 <= length(line)
+                    field = strip(line[pos:pos+field_width-1])
+                    if !isempty(field)
+                        push!(entries, field)
+                    end
+                    pos += field_width
+                else
+                    # Last field potentially shorter
+                    field = strip(line[pos:end])
+                    if !isempty(field)
+                        push!(entries, field)
+                    end
+                    break
+                end
+            end
+
+            _data = parse.(dtype, entries)
+        end
+
+        if ord_dtype < 5
+            append!(data, _data)
+        elseif ord_dtype == 5
             append!(data, complex.(_data[1:2:end], _data[2:2:end]))
-         elseif ord_dtype == 6
+        elseif ord_dtype == 6
             append!(data, complex.(_data[1:2:end], _data[2:2:end]))
-         end
+        end
     end
 
     nd = length(data)
