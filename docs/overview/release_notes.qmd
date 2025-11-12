@@ -6,6 +6,13 @@ format:
     number-sections: false
 ---
 
+## v0.3.0
+
+**Breaking changes**
+
+- `conversion_factors` field in `Dataset164` struct has been modified in favor of individual names for scaling factors. This change improves fields clarity. Thanks to [@JakeZw](https://github.com/Spectrum-Tec) for submitting the PR.
+
+
 ## v0.2.1
 
 **Internals changes only**
