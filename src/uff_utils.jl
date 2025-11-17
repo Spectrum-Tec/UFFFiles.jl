@@ -13,34 +13,125 @@ function extract_blocks(filepath::String)
     blocks = Vector{String}[]
     current_block = String[]
     in_block = false
+    is_58b = false
+    line_count = 0
 
-    open(filepath, "r") do file
-        for line in eachline(file)
-            trimmed_line = strip(line)
+    # Use an IOBuffer for mixed ASCII/binary reading
+    io = IOBuffer(read(filepath))
 
-            if trimmed_line == "-1"
-            # if strip(line) == "-1"
-                if !in_block
-                    # Start of a new block
-                    in_block = true
-                else
-                    # End of current block
-                    if !isempty(current_block)
-                        push!(blocks, copy(current_block))
-                    end
+    while !eof(io)
+        # Try to read a line
+
+        position_start = position(io)
+        line = try
+            readline(io, keep = false)
+        catch
+            break
+        end
+
+        trimmed_line = strip(line)
+
+        if trimmed_line == "-1"
+            if !in_block
+                # Beginning of a new block
+                in_block = true
+                line_count = 0
+            else
+                # End of the current block
+                if !isempty(current_block)
+                    push!(blocks, copy(current_block))
+                end
+                empty!(current_block)
+                in_block = false
+                is_58b = false
+                line_count = 0
+            end
+        elseif in_block
+            line_count += 1
+            push!(current_block, trimmed_line)
+
+            # Detect the dataset type at line 1 (dataset number)
+            if line_count == 1
+                # If the line is longer than 6 characters, it is potentially a 58b dataset
+                if length(trimmed_line) > 6
+                    is_58b = true
+                end
+            end
+
+            # If it is a 58b dataset and we have read 12 lines (13th line of the file)
+            if is_58b && line_count == 12
+                # Read the rest of the buffer until the end
+                remaining_data = read(io, String)
+
+                # Find the position of "   -1" in the data
+                idx = findlast("    -1", remaining_data)
+
+                if idx !== nothing
+                    # Extract binary data up to "   -1" (excluded)
+                    binary_string = remaining_data[1:prevind(remaining_data, first(idx))]
+                    push!(current_block, binary_string)
+                    push!(blocks, copy(current_block))
                     empty!(current_block)
                     in_block = false
+                    is_58b = false
+                    line_count = 0
+
+                    # Reposition the buffer after "   -1"
+                    skip(io, -length(remaining_data) + last(idx))
                 end
-            elseif in_block
-                # Inside a block
-                push!(current_block, trimmed_line)
-                # push!(current_block, line)
             end
         end
     end
 
+    close(io)
+
     return blocks
 end
+
+"""
+    str2bytes(s::String) -> Vector{UInt8}
+
+Converts a string to a vector of bytes (UInt8).
+
+**Input**
+- `s::String`: The input string to be converted.
+
+**Output**
+- `Vector{UInt8}`: A vector of bytes representing the input string.
+"""
+str2bytes(s::String) = collect(codeunits(s))
+
+## Old extract_blocks function for reference (no binary data support)
+# function extract_blocks(filepath::String)
+#     blocks = Vector{String}[]
+#     current_block = String[]
+#     in_block = false
+
+#     open(filepath, "r") do file
+#         for line in eachline(file)
+#             trimmed_line = strip(line)
+
+#             if trimmed_line == "-1"
+#                 if !in_block
+#                     # Start of a new block
+#                     in_block = true
+#                 else
+#                     # End of current block
+#                     if !isempty(current_block)
+#                         push!(blocks, copy(current_block))
+#                     end
+#                     empty!(current_block)
+#                     in_block = false
+#                 end
+#             elseif in_block
+#                 # Inside a block
+#                 push!(current_block, trimmed_line)
+#             end
+#         end
+#     end
+
+#     return blocks
+# end
 
 """
     extend_line(line::String) -> String
@@ -75,12 +166,16 @@ Checks if the dataset type in the given block is supported.
 - `Bool`: `true` if the dataset type is supported, `false` otherwise.
 """
 function issupported(block::Vector{String})
-    dtype = parse(Int, strip(block[1]))
+    data_block = strip(block[1])
+    if length(data_block) > 6
+        dtype = data_block[1:3]
+    else
+        dtype = data_block
+    end
     supported = supported_datasets()
 
     return dtype in supported
 end
-
 
 ## Macro
 """

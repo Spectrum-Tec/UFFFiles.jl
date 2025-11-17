@@ -6,6 +6,7 @@ A struct containing UFF Dataset 58 (Function at nodal dof) data.
 **Fields**
 - `type::Symbol`: Data set type
 - `name::String`: Data set name
+- `binary::Bool`: Indicates if the dataset is in binary format
 - `id1::String`: ID line 1
 - `id2::String`: ID line 2
 - `id3::String`: ID line 3
@@ -57,6 +58,7 @@ A struct containing UFF Dataset 58 (Function at nodal dof) data.
     # Fields specific to Dataset58
     type::Symbol    # Data set type
     name::String    # Data set name
+    binary::Bool    # Indicates if the dataset is in binary format
     id1::String     # Record 1 - field 1
     id2::String     # Record 2 - field 1
     id3::String     # Record 3 - field 1
@@ -119,6 +121,7 @@ A struct containing UFF Dataset 58 (Function at nodal dof) data.
     data::AbstractVector
 
     Dataset58(
+        binary = false,
         id1 = "",
         id2 = "",
         id3 = "",
@@ -165,7 +168,7 @@ A struct containing UFF Dataset 58 (Function at nodal dof) data.
         z_axis_label = "",
         z_axis_unit_label = "",
         data = [],
-    ) = new(:Dataset58, "Function at nodal dof", id1, id2, id3, id4, id5, func_type, func_id, ver_num, load_case, resp_name, resp_node, resp_dir, ref_name, ref_node, ref_dir, ord_dtype, num_pts, abs_spacing_type, abs_min, abs_increment, zval, abs_spec_dtype, abs_len_unit_exp, abs_force_unit_exp, abs_temp_unit_exp, abs_axis_label, abs_axis_unit_label, ord_spec_dtype, ord_len_unit_exp, ord_force_unit_exp, ord_temp_unit_exp, ord_axis_label, ord_axis_unit_label, ord_denom_spec_dtype, ord_denom_len_unit_exp, ord_denom_force_unit_exp, ord_denom_temp_unit_exp, ord_denom_axis_label, ord_denom_axis_unit_label, z_spec_dtype, z_len_unit_exp, z_force_unit_exp, z_temp_unit_exp, z_axis_label, z_axis_unit_label, data)
+    ) = new(:Dataset58, "Function at nodal dof", binary, id1, id2, id3, id4, id5, func_type, func_id, ver_num, load_case, resp_name, resp_node, resp_dir, ref_name, ref_node, ref_dir, ord_dtype, num_pts, abs_spacing_type, abs_min, abs_increment, zval, abs_spec_dtype, abs_len_unit_exp, abs_force_unit_exp, abs_temp_unit_exp, abs_axis_label, abs_axis_unit_label, ord_spec_dtype, ord_len_unit_exp, ord_force_unit_exp, ord_temp_unit_exp, ord_axis_label, ord_axis_unit_label, ord_denom_spec_dtype, ord_denom_len_unit_exp, ord_denom_force_unit_exp, ord_denom_temp_unit_exp, ord_denom_axis_label, ord_denom_axis_unit_label, z_spec_dtype, z_len_unit_exp, z_force_unit_exp, z_temp_unit_exp, z_axis_label, z_axis_unit_label, data)
 end
 
 """
@@ -877,6 +880,7 @@ Universal Dataset Number: 58
                        .
 """
 function parse_dataset58(block)
+    binary = false
     id1 = strip(block[2])
     id2 = strip(block[3])
     id3 = strip(block[4])
@@ -1012,6 +1016,7 @@ function parse_dataset58(block)
     end
 
     return Dataset58(
+        binary,
         id1,
         id2,
         id3,
@@ -1225,4 +1230,8 @@ function write_dataset(dataset::Dataset58)
     push!(lines, "    -1")
 
     return lines
+end
+
+function parse_dataset58b(block)
+    error("Binary parsing for Dataset 58 is not yet implemented.")
 end
