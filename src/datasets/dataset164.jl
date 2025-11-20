@@ -30,7 +30,10 @@ A struct containing UFF Dataset 164 (Units) data.
         units = 1,
         description = "",
         temperature_mode = 0,
-        conversion_factor = [1., 1., 1., 0.]
+        conversion_length = 1.,
+        conversion_force = 1.,
+        conversion_temperature = 1.,
+        conversion_temperature_offset = 0.
     ) = new(:Dataset164, "Units",units, description, temperature_mode, conversion_length, conversion_force, conversion_temperature, conversion_temperature_offset)
 end
 
@@ -71,7 +74,7 @@ function parse_dataset164(block)
     description = strip(record1[2:29])
     temperature_mode = parse(Int, strip(record1[31:end]))
 
-    (conversion_length, conversion_force, conversion_temperature) .= parse.(Float64, split(replace(block[3], "D" => "E")))
+    conversion_length, conversion_force, conversion_temperature = parse.(Float64, split(replace(block[3], "D" => "E")))
     conversion_temperature_offset = parse(Float64, strip(replace(block[4], "D" => "E")))
 
     return Dataset164(
