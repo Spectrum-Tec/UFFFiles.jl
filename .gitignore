@@ -3,5 +3,6 @@
 /test/datasets/short.unv
 /docs/_site
 /docs/_freeze
+/old_src
 .DS_Store
 /old_src
