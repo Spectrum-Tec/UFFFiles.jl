@@ -27,3 +27,18 @@ for (i, filename) in enumerate(filenames)
     # dataset_w = readuff("datasets/dataset15.unv")
     # dataset == dataset_w
 end
+
+# read in an ASCII file write out as binary and read in and write out as ASCII
+# test that the data is good
+readname = "uff58_nospacing.uff"
+writename = splitext(readname)[1] * ".ufb"
+writename1 = splitext(readname)[1] * ".unv"
+writename2 = splitext(readname)[1] * "_dp.ufb"
+ds = readuff(joinpath(readpath, readname))
+writeuff(joinpath(writepath, writename), ds; binary=true)
+ds1 = readuff(joinpath(writepath, writename))
+writeuff(joinpath(writepath, writename1), ds1; binary=false)
+ds2 = readuff(joinpath(writepath, writename1))
+ds[1].ord_dtype = 4
+writeuff(joinpath(writepath, writename), ds; binary=true)
+ds[1].data .≈ ds1[1].data .≈ ds2[1].data

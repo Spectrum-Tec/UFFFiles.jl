@@ -24,12 +24,12 @@ function readuff(filename::String)
                 # Determine dataset type from the following line & mark the position
                 mark(io)
                 line = readline(io)
-                @show(line)
+                #@show(line)
                 dtype = length(line) > 6 ? strip(line[1:7]) : strip(line[1:6])
-                @show(dtype)
+                #@show(dtype)
                 if any(dtype .== supported_datasets())
-        # Parse the block based on its dataset type
-        # https://stackoverflow.com/questions/34016768/julia-invoke-a-function-by-a-given-string/34023458#34023458
+                    # Parse the block based on its dataset type
+                    # https://stackoverflow.com/questions/34016768/julia-invoke-a-function-by-a-given-string/34023458#34023458
                     parse_function = getfield(UFFFiles, Symbol("parse_dataset", dtype))
                     @show(parse_function)
                     datatmp = parse_function(io)

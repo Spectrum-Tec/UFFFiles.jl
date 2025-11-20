@@ -192,21 +192,21 @@ function write_dataset(io, dataset::Dataset58)
     n = length(dataset.data)
     binary_bytes = 
     if (dataset.ord_dtype == 2 && dataset.abs_spacing_type == 1)      # Case 1 - Real, Single Precision, Even Spacing
-        n*32
+        n*4
     elseif (dataset.ord_dtype == 2 && dataset.abs_spacing_type == 0)  # Case 2 - Real, Single Precision, Uneven Spacing
-        2n*32
+        2n*4
     elseif (dataset.ord_dtype == 5 && dataset.abs_spacing_type == 1)  # Case 3 - Complex, Single Precision, Even Spacing
-        2n*32
+        2n*4
     elseif (dataset.ord_dtype == 5 && dataset.abs_spacing_type == 0)  # Case 4 - Complex, Single Precision, Uneven Spacing
-        3n*32
+        3n*4
     elseif (dataset.ord_dtype == 2 && dataset.abs_spacing_type == 1)  # Case 5 - Real, Double Precision, Even Spacing
-        n*64
+        n*8
     elseif (dataset.ord_dtype == 2 && dataset.abs_spacing_type == 0)  # Case 6 - Real, Double Precision, Uneven Spacing
-        2n*64  # both abscissa and ordinate written in Float64
+        2n*8  # both abscissa and ordinate written in Float64
     elseif (dataset.ord_dtype == 5 && dataset.abs_spacing_type == 1)  # Case 7 - Complex, Double Precision, Even Spacing
-        2n*64
+        2n*8
     elseif (dataset.ord_dtype == 5 && dataset.abs_spacing_type == 0)  # Case 8 - Complex, Double Precision, Uneven Spacing
-        3n*64  # both abscissa and ordinate written in Float64
+        3n*8  # both abscissa and ordinate written in Float64
     end
 
     # Dataset number

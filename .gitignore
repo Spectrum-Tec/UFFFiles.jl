@@ -1,6 +1,7 @@
 /Manifest*.toml
 /test/datasets/face1.unv
 /test/datasets/short.unv
+/test/datasets/written_datasets
 /docs/_site
 /docs/_freeze
 /old_src

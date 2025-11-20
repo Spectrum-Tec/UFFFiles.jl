@@ -713,62 +713,37 @@ function parse_dataset58(io)
     id3 = strip(readline(io))
     id4 = strip(readline(io))
     id5 = strip(readline(io))
-    # @show(id1, id2, id3, id4, id5)
 
     # Record 6
     r6 = readline(io)
-    len_r6 = length(r6)
-
-    #=func_type = parse(Int, strip(r6[1]))
-    func_id = parse(Int, strip(r6[2]))
-    version_num = parse(Int, strip(r6[3]))
-    load_case_id = parse(Int, strip(r6[4]))
-    response_entity = strip(r6[5])
-    response_node = parse(Int, strip(r6[6]))
-    response_direction = parse(Int, strip(r6[7]))
-    reference_entity = strip(r6[8])=#
-    # This modified for the space in Sample_UFF58b_bin.uff record 6 field 5
-    func_type = parse(Int, r6[1:5])
-    func_id = parse(Int, r6[6:15])
-    version_num = parse(Int, r6[16:20])
-    load_case_id = parse(Int, r6[21:30])
-    response_entity = r6[32:41]
-    response_node = parse(Int, r6[42:51])
-    response_direction = parse(Int, r6[52:55])
-    reference_entity = r6[57:66]
-
-    if len_r6 > 8
-        reference_node = parse(Int, r6[67:76])
-        reference_direction = parse(Int, r6[77:80])
-    else
-        reference_node = 0
-        reference_direction = 0
-    end
+    n, func_type, func_id, version_num, load_case_id, _, 
+        response_entity, response_node, response_direction, _, 
+        reference_entity, reference_node,  reference_direction= 
+        @scanf(r6, "%5i%10i%5i%10i%c%10c%10i%4i%c%10c%10i%4i", Int, Int, Int, Int, Char, String, Int, Int, Char, String, Int, Int)
 
     # Record 7
-    r7 = split(readline(io))
-    ord_dtype, num_pts, abs_spacing_type = parse.(Int, strip.(r7[1:3]))
-    abs_min, abs_increment, zval = parse.(Float64, strip.(r7[4:6]))
+    r7 = (readline(io))
+    n, ord_dtype, num_pts, abs_spacing_type, abs_min, abs_increment, zval = @scanf(r7, "%10i%10i%10i%13e%13e%13e", Int, Int, Int, Float64, Float64, Float64)
 
     # Record 8
-    r8 = split(readline(io))
-    abs_spec_dtype, abs_len_unit_exp, abs_force_unit_exp, abs_temp_unit_exp = parse.(Int, strip.(r8[1:4]))
-    abs_axis_label, abs_axis_unit_label = strip.(r8[5:6])
+    r8 = (readline(io))
+    n, abs_spec_dtype, abs_len_unit_exp, abs_force_unit_exp, abs_temp_unit_exp, _, abs_axis_label, _, abs_axis_unit_label = 
+        @scanf(r8, "%10i%5i%5i%5i%c%20c%c%20c", Int, Int, Int, Int, Char, String, Char, String)
 
     # Record 9
-    r9 = split(readline(io))
-    ord_spec_dtype, ord_len_unit_exp, ord_force_unit_exp, ord_temp_unit_exp = parse.(Int, strip.(r9[1:4]))
-    ord_axis_label, ord_axis_unit_label = strip.(r9[5:6])
+    r9 = (readline(io))
+    n, ord_spec_dtype, ord_len_unit_exp, ord_force_unit_exp, ord_temp_unit_exp, _, ord_axis_label, _, ord_axis_unit_label = 
+        @scanf(r9, "%10i%5i%5i%5i%c%20c%c%20c", Int, Int, Int, Int, Char, String, Char, String)
 
     # Record 10
-    r10 = split(readline(io))
-    ord_denom_spec_dtype, ord_denom_len_unit_exp, ord_denom_force_unit_exp, ord_denom_temp_unit_exp = parse.(Int, strip.(r10[1:4]))
-    ord_denom_axis_label, ord_denom_axis_unit_label = strip.(r10[5:6])
+    r10 = (readline(io))
+    n, ord_denom_spec_dtype, ord_denom_len_unit_exp, ord_denom_force_unit_exp, ord_denom_temp_unit_exp, _, ord_denom_axis_label, _, ord_denom_axis_unit_label = 
+        @scanf(r9, "%10i%5i%5i%5i%c%20c%c%20c", Int, Int, Int, Int, Char, String, Char, String)
 
     # Record 11
-    r11 = split(readline(io))
-    z_spec_dtype, z_len_unit_exp, z_force_unit_exp, z_temp_unit_exp = parse.(Int, strip.(r11[1:4]))
-    z_axis_label, z_axis_unit_label = strip.(r11[5:6])
+    r11 = (readline(io))
+    n, z_spec_dtype, z_len_unit_exp, z_force_unit_exp, z_temp_unit_exp, _, z_axis_label, _, z_axis_unit_label = 
+    @scanf(r9, "%10i%5i%5i%5i%c%20c%c%20c", Int, Int, Int, Int, Char, String, Char, String)
 
     # Record 12
     if (ord_dtype == 2 && abs_spacing_type == 1) # Case 1 - Real, Single Precision, Even Spacing 6E13.5
@@ -777,12 +752,12 @@ function parse_dataset58(io)
       fw = 13   # field width
       for i in 1:n:num_pts
         r12 = readline(io)
-        @show(i, r12)
+        #@show(i, r12)
         for j in 1:n
           i + j - 1 > num_pts && break  # break if num_pts exceeded
           _data[i+j-1] = parse(Float32, r12[(j-1)*fw+1:j*fw])
         end
-        @show(typeof(_data), size(_data))
+        #@show(typeof(_data), size(_data))
       end
       abscissa = Float32[]
       data = _data
