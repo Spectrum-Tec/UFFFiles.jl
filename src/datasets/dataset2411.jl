@@ -56,7 +56,7 @@ function parse_dataset2411(io)
     disp_coord_system = similar(nodes_ID)
     color = similar(nodes_ID)
     node_coords = Matrix{Float64}(undef, 0, 3)
-    
+
     while (r1 = readline(io)) != "    -1"
         tmp = parse.(Int, split(r1))
         push!(nodes_ID, tmp[1])

@@ -4,4 +4,6 @@
 /test/datasets/written_datasets
 /docs/_site
 /docs/_freeze
+/old_src
 .DS_Store
+/old_src

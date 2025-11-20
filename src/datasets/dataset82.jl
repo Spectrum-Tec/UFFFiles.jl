@@ -95,7 +95,6 @@ Write a UFF Dataset 82 (Tracelines) to a vector of strings.
 - `Vector{String}`: Vector of formatted strings representing the UFF file content
 """
 function write_dataset(io, dataset::Dataset82)
-    lines = String[]
 
     # Write header
     println(io, "    -1")

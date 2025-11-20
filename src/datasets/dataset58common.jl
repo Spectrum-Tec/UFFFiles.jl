@@ -58,6 +58,7 @@ A struct containing UFF Dataset 58 (Function at nodal dof) data.
     # Fields specific to Dataset58
     type::Symbol    # Data set type
     name::String    # Data set name
+    binary::Bool    # Binary or ASCII flag
     id1::String     # Record 1 - field 1
     id2::String     # Record 2 - field 1
     id3::String     # Record 3 - field 1
@@ -121,6 +122,7 @@ A struct containing UFF Dataset 58 (Function at nodal dof) data.
     data::AbstractVector        # Record 12
 
     Dataset58(
+        binary = false,
         id1 = "",
         id2 = "",
         id3 = "",
@@ -168,7 +170,7 @@ A struct containing UFF Dataset 58 (Function at nodal dof) data.
         z_axis_unit_label = "",
         abscissa = [],
         data = []
-    ) = new(:Dataset58, "Function at nodal dof", id1, id2, id3, id4, id5, func_type, func_id, ver_num, load_case, resp_name, resp_node, resp_dir, ref_name, ref_node, ref_dir, ord_dtype, num_pts, abs_spacing_type, abs_min, abs_increment, zval, abs_spec_dtype, abs_len_unit_exp, abs_force_unit_exp, abs_temp_unit_exp, abs_axis_label, abs_axis_unit_label, ord_spec_dtype, ord_len_unit_exp, ord_force_unit_exp, ord_temp_unit_exp, ord_axis_label, ord_axis_unit_label, ord_denom_spec_dtype, ord_denom_len_unit_exp, ord_denom_force_unit_exp, ord_denom_temp_unit_exp, ord_denom_axis_label, ord_denom_axis_unit_label, z_spec_dtype, z_len_unit_exp, z_force_unit_exp, z_temp_unit_exp, z_axis_label, z_axis_unit_label, abscissa, data)
+    ) = new(:Dataset58, "Function at nodal dof", binary, id1, id2, id3, id4, id5, func_type, func_id, ver_num, load_case, resp_name, resp_node, resp_dir, ref_name, ref_node, ref_dir, ord_dtype, num_pts, abs_spacing_type, abs_min, abs_increment, zval, abs_spec_dtype, abs_len_unit_exp, abs_force_unit_exp, abs_temp_unit_exp, abs_axis_label, abs_axis_unit_label, ord_spec_dtype, ord_len_unit_exp, ord_force_unit_exp, ord_temp_unit_exp, ord_axis_label, ord_axis_unit_label, ord_denom_spec_dtype, ord_denom_len_unit_exp, ord_denom_force_unit_exp, ord_denom_temp_unit_exp, ord_denom_axis_label, ord_denom_axis_unit_label, z_spec_dtype, z_len_unit_exp, z_force_unit_exp, z_temp_unit_exp, z_axis_label, z_axis_unit_label, abscissa, data)
 end
 
 
@@ -184,13 +186,13 @@ Write a UFF Dataset 58 (Function Data) to a vector of strings.
 - `Vector{String}`: A vector of strings representing the lines of the dataset.
 """
 function write_dataset(io, dataset::Dataset58)
-    # the abcissa for uneven double precision ASCII datasets are Float32.  
+    # the abcissa for uneven double precision ASCII datasets are Float32.
     # the abscissa for uneven double precision binary datasets are Float64
     # Start marker
     println(io, "    -1")
 
     n = length(dataset.data)
-    binary_bytes = 
+    binary_bytes =
     if (dataset.ord_dtype == 2 && dataset.abs_spacing_type == 1)      # Case 1 - Real, Single Precision, Even Spacing
         n*4
     elseif (dataset.ord_dtype == 2 && dataset.abs_spacing_type == 0)  # Case 2 - Real, Single Precision, Uneven Spacing
@@ -210,7 +212,7 @@ function write_dataset(io, dataset::Dataset58)
     end
 
     # Dataset number
-    ds = if binary_write
+    ds = if dataset.binary
             @sprintf("%6i%c%6i%6i%12i%12i%6i%6i%12i%12i",
                 58,             # 58
                 'b',            # lowercase b
@@ -220,9 +222,9 @@ function write_dataset(io, dataset::Dataset58)
                 binary_bytes,   # number of bytes following ASCII lines
                 0, 0, 0, 0
             )
-            else
-                "    58"
-            end
+        else
+            "    58"
+        end
     println(io, ds)
 
     # Records 1-5: ID Lines (80A1 format)
@@ -304,7 +306,7 @@ function write_dataset(io, dataset::Dataset58)
 
     # Record 12: Data Values
     # Call binary or ASCII routine
-    if binary_write
+    if dataset.binary
         write_dataset58b_data(io, dataset)
     else
         write_dataset58_data(io, dataset)

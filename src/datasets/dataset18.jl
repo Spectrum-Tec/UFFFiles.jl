@@ -71,7 +71,6 @@ Universal Dataset Number: 18
 Records 1 thru 3 are repeated for each coordinate system in the model.
 """
 function parse_dataset18(io)
-
     cs_num = Int[]
     cs_type = Int[]
     ref_cs_num = Int[]

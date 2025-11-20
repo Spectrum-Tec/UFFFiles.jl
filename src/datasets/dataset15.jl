@@ -87,7 +87,6 @@ Write a UFF Dataset 15 (Nodes) to a vector of strings.
 - `Vector{String}`: Vector of formatted strings representing the UFF file content
 """
 function write_dataset(io, dataset::Dataset15)
-    lines = String[]
 
     # Write header
     println(io, "    -1")

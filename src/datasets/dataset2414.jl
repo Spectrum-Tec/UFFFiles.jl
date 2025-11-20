@@ -807,7 +807,7 @@ function parse_dataset2414(io)
     while (line = readline(io)) != "    -1"
         push!(block, line)
     end
-    
+
     nlines = length(block)
 
     analysis_dlabel = parse(Int, strip(block[2]))

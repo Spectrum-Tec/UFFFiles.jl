@@ -9,7 +9,7 @@ A struct containing UFF Dataset 1858 (Dataset 58 qualifiers) data.
 - `set_record_number::Int`: Set record number
 - `octave_format::Int`: Set record number
 - `meas_run::Int`: Measurement run number
-- `octave_weighting::Int`: Octave format 
+- `octave_weighting::Int`: Octave format
 - `window::Int`: Window type
 - `amp_scaling::Int`: Unknown, half-peak, peak, rms
 - `normalization::Int`: Unknown, auto-spectra, PSD, ESD
@@ -61,7 +61,7 @@ A struct containing UFF Dataset 1858 (Dataset 58 qualifiers) data.
     Dataset1858(
         set_record_number = 0,
         octave_format = 0,
-        meas_run = 0, 
+        meas_run = 0,
         octave_weighting = 0,
         window = 0,
         amp_scaling = 0,
@@ -71,20 +71,20 @@ A struct containing UFF Dataset 1858 (Dataset 58 qualifiers) data.
         ord_denom_data_type_qual = 0,
         z_axis_data_type_qual = 0,
         sampling_type = 0,
-        z_rpm_value = 0.0,
-        z_time_value = 0.0,
-        z_order_value = 0.0,
+        z_rpm_value = 0.,
+        z_time_value = 0.,
+        z_order_value = 0.,
         num_samples = 0,
-        uv1 = 0.0,
-        uv2 = 0.0,
-        uv3 = 0.0,
-        uv4 = 0.0,
-        exp_window_damping = 0.0,
+        uv1 = 0.,
+        uv2 = 0.,
+        uv3 = 0.,
+        uv4 = 0.,
+        exp_window_damping = 0.,
         resp_dir = "x+",
         ref_dir = "NONE"
-        ) = new(:Dataset164, "Units", set_record_number, octave_format, meas_run, 
+        ) = new(:Dataset1858, "Units", set_record_number, octave_format, meas_run,
             octave_weighting, window, amp_scaling, normalization, abs_data_type_qual,
-            ord_num_data_type_qual, ord_denom_data_type_qual, z_axis_data_type_qual, 
+            ord_num_data_type_qual, ord_denom_data_type_qual, z_axis_data_type_qual,
             sampling_type, z_rpm_value, z_time_value, z_order_value, num_samples,
             uv1, uv2, uv3, uv4, exp_window_damping, resp_dir, ref_dir)
 end

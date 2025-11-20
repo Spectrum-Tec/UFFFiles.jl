@@ -1,8 +1,9 @@
 module UFFFiles
-    using Dates
-    using FileIO
-    using Printf
-    using Scanf
+    using Dates, FileIO, Printf, Scanf, UUIDs
+
+    # FileIO integration
+    const idUFFFiles = :UFFFiles => UUID("20c5726e-8372-4c34-be2c-190a5a70d483")
+    add_format(format"UFF", (), [".uff", ".unv", ".uf", ".bunv", ".ufb", ".buf"], [idUFFFiles])
 
     # Base UFFDataset abstract type
     abstract type UFFDataset end

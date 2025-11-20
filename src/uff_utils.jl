@@ -1,48 +1,4 @@
 """
-    extract_blocks(filepath::String) -> Vector{Vector{String}}
-
-Extracts blocks of data from a UFF file located at `filepath`. Each block is delimited by lines containing `-1`.
-
-**Input**
-- `filepath::String`: Path to the UFF file.
-
-**Output**
-- `blocks::Vector{Vector{String}}`: A vector containing blocks of data, where each block is represented as a vector of strings.
-"""
-function extract_blocks(filepath::String)
-    blocks = Vector{String}[]
-    current_block = String[]
-    in_block = false
-
-    open(filepath, "r") do file
-        for line in eachline(file)
-            trimmed_line = strip(line)
-
-            if trimmed_line == "-1"
-            # if strip(line) == "-1"
-                if !in_block
-                    # Start of a new block
-                    in_block = true
-                else
-                    # End of current block
-                    if !isempty(current_block)
-                        push!(blocks, copy(current_block))
-                    end
-                    empty!(current_block)
-                    in_block = false
-                end
-            elseif in_block
-                # Inside a block
-                push!(current_block, trimmed_line)
-                # push!(current_block, line)
-            end
-        end
-    end
-
-    return blocks
-end
-
-"""
     extend_line(line::String) -> String
 
 Extends a line to 80 characters by adding spaces if it is shorter than 80 characters and trim to 80 if req'd.
@@ -64,25 +20,6 @@ function extend_line(line)
 
     return line
 end
-
-"""
-    issupported(block::Vector{String}) -> Bool
-
-Checks if the dataset type in the given block is supported.
-
-**Input**
-- `block::Vector{String}`: A vector of strings representing a block of data.
-
-**Output**
-- `Bool`: `true` if the dataset type is supported, `false` otherwise.
-"""
-function issupported(block::Vector{String})
-    dtype = parse(Int, strip(block[1]))
-    supported = supported_datasets()
-
-    return dtype in supported
-end
-
 
 ## Macro
 """
