@@ -3,6 +3,7 @@ pwd()
 using UFFFiles
 using Test
 using FileCmp
+using Glob
 
 @testset "UFFFiles.jl" begin
     # Write your tests here.
@@ -39,6 +40,23 @@ writeuff(joinpath(writepath, writename), ds; binary=true)
 ds1 = readuff(joinpath(writepath, writename))
 writeuff(joinpath(writepath, writename1), ds1; binary=false)
 ds2 = readuff(joinpath(writepath, writename1))
-ds[1].ord_dtype = 4
-writeuff(joinpath(writepath, writename), ds; binary=true)
+#ds[1].ord_dtype = 4  # This does not work because struct is immutable
+
 ds[1].data .≈ ds1[1].data .≈ ds2[1].data
+
+
+# Test all the cases in dataset58
+readpath = "datasets"
+writepath = "written_datasets"
+filenames = glob("pump1*.unv", "datasets")
+for filename in filenames
+    # println("Start $filename")
+    filename = splitpath(filename)[end]
+    ds = readuff(joinpath(readpath, filename));
+    writeuff(joinpath(writepath, filename), ds)
+    ds1 = readuff(joinpath(writepath, filename));
+    ab = ds[1].abscissa ≈ ds1[1].abscissa
+    or = ds[1].data ≈ ds1[1].data
+    # all other fields could be matched as well
+    println("$filename: abscissa match $ab; data match $or")
+end

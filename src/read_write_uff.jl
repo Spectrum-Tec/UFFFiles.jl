@@ -1,5 +1,3 @@
-global binary_write::Bool
-
 """
     readuff(filename::String) -> Vector{UFFDataset}
 
@@ -21,7 +19,7 @@ function readuff(filename::String)
             line = readline(io)
 
             # Look for dataset delimiter
-            if line == "    -1"
+            if line[1:6] == "    -1"
                 # Determine dataset type from the following line & mark the position
                 mark(io)
                 line = readline(io)
@@ -36,7 +34,7 @@ function readuff(filename::String)
                     data = push!(data, datatmp)
                 else
                      @warn "Unsupported dataset type: $dtype - skipping this dataset"
-                     while readline(io) != "    -1"  # Remove the -1 from the end of this dataset
+                     while readline(io)[1:6] != "    -1"  # Remove the -1 from the end of this dataset
                      end
                 end
             end

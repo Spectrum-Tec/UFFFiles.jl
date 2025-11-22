@@ -124,72 +124,87 @@ function parse_dataset58b(io)
       @scanf(r6, "%5i%10i%5i%10i%c%10c%10i%4i%c%10c%10i%4i", Int, Int, Int, Int, Char, String, Int, Int, Char, String, Int, Int)
 
   # Record 7
-  r7 = (readline(io))
+  r7 = readline(io)
   n, ord_dtype, num_pts, abs_spacing_type, abs_min, abs_increment, zval = @scanf(r7, "%10i%10i%10i%13e%13e%13e", Int, Int, Int, Float64, Float64, Float64)
 
   # Record 8
-  r8 = (readline(io))
+  r8 = readline(io)
   n, abs_spec_dtype, abs_len_unit_exp, abs_force_unit_exp, abs_temp_unit_exp, _, abs_axis_label, _, abs_axis_unit_label =
       @scanf(r8, "%10i%5i%5i%5i%c%20c%c%20c", Int, Int, Int, Int, Char, String, Char, String)
 
   # Record 9
-  r9 = (readline(io))
+  r9 = readline(io)
   n, ord_spec_dtype, ord_len_unit_exp, ord_force_unit_exp, ord_temp_unit_exp, _, ord_axis_label, _, ord_axis_unit_label =
       @scanf(r9, "%10i%5i%5i%5i%c%20c%c%20c", Int, Int, Int, Int, Char, String, Char, String)
 
   # Record 10
-  r10 = (readline(io))
+  r10 = readline(io)
   n, ord_denom_spec_dtype, ord_denom_len_unit_exp, ord_denom_force_unit_exp, ord_denom_temp_unit_exp, _, ord_denom_axis_label, _, ord_denom_axis_unit_label =
       @scanf(r10, "%10i%5i%5i%5i%c%20c%c%20c", Int, Int, Int, Int, Char, String, Char, String)
 
   # Record 11
-  r11 = (readline(io))
+  r11 = readline(io)
   n, z_spec_dtype, z_len_unit_exp, z_force_unit_exp, z_temp_unit_exp, _, z_axis_label, _, z_axis_unit_label =
       @scanf(r11, "%10i%5i%5i%5i%c%20c%c%20c", Int, Int, Int, Int, Char, String, Char, String)
 
   # Record 12
   _data = read(io, binary_bytes)
-
+  
   # Convert UInt8 to Values
   if (ord_dtype == 2 && abs_spacing_type == 1) # Case 1 - Real, Single Precision, Even Spacing
-    abscissa = Float32[]
+    abscissa = Float32[]  
     data = reinterpret(Float32, _data)
   elseif (ord_dtype == 2 && abs_spacing_type == 0) # Case 2 - Real, Single Precision, Uneven Spacing
     tmp = reshape(reinterpret(Float32, _data), (2, :))'
     abscissa = tmp[:, 1]
     data = tmp[:, 2]
   elseif (ord_dtype == 5 && abs_spacing_type == 1)  # Case 3 - Complex, Single Precision, Even Spacing
-    abscissa = Float32[]
+    abscissa = Float32[]  
     data = reinterpret(ComplexF32, _data)
   elseif (ord_dtype == 5 && abs_spacing_type == 0)  # Case 4 - Complex, Single Precision, Uneven Spacing
     tmp = reshape(reinterpret(Float32, _data), (3, :))'
     abscissa = tmp[:, 1]
-    data = reinterpret(ComplexF32, reshape(tmp[:, 2:3]', (:, 1)))
-  elseif (ord_dtype == 2 && abs_spacing_type == 1) # Case 5 - Real, Double Precision, Even Spacing
-    abscissa = Float64[]
+    data = reinterpret(ComplexF32, vec(tmp[:, 2:3]'))
+  elseif (ord_dtype == 4 && abs_spacing_type == 1) # Case 5 - Real, Double Precision, Even Spacing
+    abscissa = Float64[]  
     data = reinterpret(Float64, _data)
-  elseif (ord_dtype == 2 && abs_spacing_type == 0) # Case 6 - Real, Double Precision, Uneven Spacing
-    2*8*num_pts == binary_bytes || println("Data Integrity Problem")
-    tmp = reshape(reinterpret(Float64, _data), (2, :))'
-    abscissa = tmp[:, 1]
-    data = tmp[:, 2]
-  elseif (ord_dtype == 5 && abs_spacing_type == 1)  # Case 7 - Complex, Double Precision, Even Spacing
-    abscissa = Float64[]
+  elseif (ord_dtype == 4 && abs_spacing_type == 0) # Case 6 - Real, Double Precision, Uneven Spacing
+    # There is some ambiguity as to whether the abscissa is Float32 or Float64.  This handles both
+    if 2*8*num_pts == binary_bytes 
+      tmp = reshape(reinterpret(Float64, _data), (2, :))'
+      abscissa = tmp[:, 1]
+      data = tmp[:, 2]
+    elseif (4+8)*num_pts == binary_bytes
+      abscissa = Vector{Float32}(undef, num_pts)
+      data = Vector{Float64}(undef, num_pts)
+      for i in 1:12:binary_bytes
+        abscissa[(i-1)÷12 + 1] = reinterpret(Float32, _data[i:i+3]) |> only
+        data[(i-1)÷12 + 1] = reinterpret(Float64, _data[i+4:i+11]) |> only
+      end
+    else 
+      println("Data Integrity Problem")
+    end
+  elseif (ord_dtype == 6 && abs_spacing_type == 1)  # Case 7 - Complex, Double Precision, Even Spacing
+    abscissa = Float64[] 
     data = reinterpret(ComplexF64, _data)
-  elseif (ord_dtype == 5 && abs_spacing_type == 0)  # Case 8 - Complex, Double Precision, Uneven Spacing
+  elseif (ord_dtype == 6 && abs_spacing_type == 0)  # Case 8 - Complex, Double Precision, Uneven Spacing
     # There is some ambiguity as to whether the abscissa is Float32 or Float64.  This handles both
     if 3*8*num_pts == binary_bytes
       tmp = reshape(reinterpret(Float64, _data), (3, :))'
       abscissa = tmp[:, 1]
-      data = reinterpret(ComplexF64, reshape(tmp[:, 2:3]', (:, 1)))
+      data = reinterpret(ComplexF64, vec(tmp[:, 2:3]'))
     elseif (4+16)*num_pts == binary_bytes
-      abscissa = reinterpret(Float32, Float_data[1:20:binary_bytes])
-      data = reinterpret(Float64, _data[5:20:binary_bytes])
-    else
+      abscissa = Vector{Float32}(undef, num_pts)
+      data = Vector{ComplexF64}(undef, num_pts)
+      for i in 1:20:binary_bytes
+        abscissa[(i-1)÷20 + 1] = reinterpret(Float32, _data[i:i+3]) |> only
+        data[(i-1)÷20 + 1] = reinterpret(ComplexF64, _data[i+4:i+19]) |> only
+      end
+    else 
       println("Data Integrity Problem")
     end
   end
-
+  
   readline(io) # remove trailing "    -1" from dataset
 
   return Dataset58(
@@ -259,16 +274,16 @@ function write_dataset58b_data(io, dataset)
     elseif (dataset.ord_dtype == 5 && dataset.abs_spacing_type == 0)  # Case 4 - Complex, Single Precision, Uneven Spacing
         tmp = Float32.(reshape(reduce(vcat, [dataset.abscissa', real(dataset.data)', imag(dataset.data)']), :, 1))
         write(io, tmp)
-    elseif (dataset.ord_dtype == 2 && dataset.abs_spacing_type == 1) # Case 5 - Real, Double Precision, Even Spacing
+    elseif (dataset.ord_dtype == 4 && dataset.abs_spacing_type == 1) # Case 5 - Real, Double Precision, Even Spacing
         write(io, Float64.(dataset.data))
-    elseif (dataset.ord_dtype == 2 && dataset.abs_spacing_type == 0) # Case 6 - Real, Double Precision, Uneven Spacing
+    elseif (dataset.ord_dtype == 4 && dataset.abs_spacing_type == 0) # Case 6 - Real, Double Precision, Uneven Spacing
         # Both abscissa and ordinate are Float64
         tmp = Float64.(reshape(reduce(vcat, [dataset.abscissa', dataset.data']), :, 1))
         write(io, tmp)
-    elseif (dataset.ord_dtype == 5 && dataset.abs_spacing_type == 1)  # Case 7 - Complex, Double Precision, Even Spacing
+    elseif (dataset.ord_dtype == 6 && dataset.abs_spacing_type == 1)  # Case 7 - Complex, Double Precision, Even Spacing
         tmp = Float64.(reshape(reduce(vcat, [real(dataset.data)', imag(dataset.data)']), :, 1))
         write(io, tmp)
-     elseif (dataset.ord_dtype == 5 && dataset.abs_spacing_type == 0)  # Case 8 - Complex, Double Precision, Uneven Spacing
+     elseif (dataset.ord_dtype == 6 && dataset.abs_spacing_type == 0)  # Case 8 - Complex, Double Precision, Uneven Spacing
         # Both abscissa and ordinate are Float64
         tmp = Float64.(reshape(reduce(vcat, [dataset.abscissa', real(dataset.data)', imag(dataset.data)']), :, 1))
         write(io, tmp)
