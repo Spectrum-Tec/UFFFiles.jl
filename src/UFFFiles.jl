@@ -1,5 +1,5 @@
 module UFFFiles
-    using Dates, Printf, Scanf
+    using Dates, FileIO, Printf, Scanf
 
     # Base UFFDataset abstract type
     abstract type UFFDataset end
