@@ -719,10 +719,10 @@ function parse_dataset58(io)
 
   # Record 6
   r6 = readline(io)
-  n, func_type, func_id, version_num, load_case_id, _,
-      response_entity, response_node, response_direction, _,
-      reference_entity, reference_node,  reference_direction=
-      @scanf(r6, "%5i%10i%5i%10i%c%10c%10i%4i%c%10c%10i%4i", Int, Int, Int, Int, Char, String, Int, Int, Char, String, Int, Int)
+  func_type, func_id, version_num, load_case_id, _,
+  response_entity, response_node, response_direction, _,
+  reference_entity, reference_node,  reference_direction =
+  @scanf(r6, "%5i%10i%5i%10i%c%10c%10i%4i%c%10c%10i%4i", Int, Int, Int, Int, Char, String, Int, Int, Char, String, Int, Int)[2:end]
 
   # Record 7
   r7 = readline(io)
@@ -989,7 +989,5 @@ function write_dataset58_data(io, dataset::Dataset58)
             line = join([@sprintf(" %12.5E %19.12E %19.12E", a, real(o), imag(o)) for (a, o) in zip(dataset.abscissa[i:ie], dataset.data[i:ie])])
             println(io, line)
         end
-    end
-
-    return nothing
+      end
 end
