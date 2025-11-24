@@ -98,8 +98,8 @@ function parse_dataset58b(io)
     # this function should be able to read the abscissa for uneven datasets if they are Float32 or Float64.
     reset(io)
     func = readline(io)
-    n, _, type, endian, floating_point_format, num_ascii_lines, binary_bytes, _... = @scanf(func, "%6i%c%6i%6i%12i%12i%6i%6i%12i%12i",
-        Int, Char, Int, Int, Int, Int, Int, Int, Int, Int)
+    type, endian, floating_point_format, num_ascii_lines, binary_bytes, _... = @scanf(func, "%6i%c%6i%6i%12i%12i%6i%6i%12i%12i",
+        Int, Char, Int, Int, Int, Int, Int, Int, Int, Int)[3:end]
 
     # Need to implement proper error handling
     type == 'b' || error("Expected UFF58 binary file but type is $type")
@@ -266,7 +266,7 @@ function parse_dataset58b(io)
         z_axis_label,
         z_axis_unit_label,
         abscissa,
-        data
+        convert.(eltype(data), data)
     )
 end
 

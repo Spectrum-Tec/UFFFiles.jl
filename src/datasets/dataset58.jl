@@ -875,7 +875,7 @@ function parse_dataset58(io)
         end
     end
 
-    # Consume the trailing "    -1"
+  # Consume the trailing "    -1"
   readline(io)
 
   return Dataset58(
@@ -925,7 +925,7 @@ function parse_dataset58(io)
       z_axis_label,
       z_axis_unit_label,
       abscissa,
-      data
+      convert.(eltype(data), data)
   )
 end
 
