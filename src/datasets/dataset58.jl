@@ -707,9 +707,6 @@ Universal Dataset Number: 58
                        .
 """
 function parse_dataset58(io)
-    # ASCII UFF Dataset 58 Parser
-    binary = false
-
     # Record 1-5 - Format(80A1)
     id1 = strip(readline(io))
     id2 = strip(readline(io))
@@ -882,7 +879,6 @@ function parse_dataset58(io)
   readline(io)
 
   return Dataset58(
-      binary,
       id1,
       id2,
       id3,

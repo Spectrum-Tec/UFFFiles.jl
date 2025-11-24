@@ -24,7 +24,11 @@ function supported_datasets()
     return ["15", "18", "55", "58", "58b", "82", "151", "164", "1858", "2411", "2412", "2414"]
 end
 
+"""
+    supported_file_extensions()
 
+Returns a vector of supported UFF file extensions.
+"""
 function supported_file_extensions()
     # Returns a vector of supported UFF file extensions
     return ["unv", "uff", "uf", "bunv", "ufb", "buf"]

@@ -6,8 +6,8 @@ format:
     number-sections: true
 engine: julia
 execute:
-  freeze: auto
-  cache: true
+  freeze: false
+  cache: false
 ---
 
 ```{julia}
@@ -52,6 +52,21 @@ dtypes = dataset_types.(data_all)
 using UFFFiles
 
 valid_datasets = supported_datasets()
+```
+
+## Supported file extensions
+
+::: {.api}
+```{julia}
+#| echo: false
+@doc supported_file_extensions
+```
+:::
+
+```julia
+using UFFFiles
+
+valid_file_extensions = supported_file_extensions()
 ```
 
 ## Connectivity Matrix

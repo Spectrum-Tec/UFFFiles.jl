@@ -95,9 +95,6 @@ The format of this line should remain constant for any other dataset
 that takes on a binary format in the future.
 """
 function parse_dataset58b(io)
-    # Binary UFF Dataset 58 Parser
-    binary = true
-
     # this function should be able to read the abscissa for uneven datasets if they are Float32 or Float64.
     reset(io)
     func = readline(io)
@@ -223,7 +220,6 @@ function parse_dataset58b(io)
     readline(io) # remove trailing "    -1" from dataset
 
     return Dataset58(
-        binary,
         id1,
         id2,
         id3,

@@ -1,5 +1,5 @@
 ---
-title: Dataset 58 - Function at nodal DOF
+title: Dataset 58 & 58b - Function at nodal DOF
 format:
   html:
     toc: true
@@ -21,6 +21,11 @@ using UFFFiles
 ```{julia}
 #| echo: false
 @doc UFFFiles.parse_dataset58
+```
+
+```{julia}
+#| echo: false
+@doc UFFFiles.parse_dataset58b
 ```
 
 ## API

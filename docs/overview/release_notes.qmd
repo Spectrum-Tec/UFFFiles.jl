@@ -16,6 +16,8 @@ format:
   - `readuff` and `writeuff` functions now check the file extension and throw an error if it is not supported.
 
 - Datasets
+  - Add `Dataset1858`. Thanks to [@JakeZw](https://github.com/Spectrum-Tec) for submitting the PR.
+
   - `readuff` and `writeuff` now can now read and write binary `Dataset58`. Thanks to [@JakeZw](https://github.com/Spectrum-Tec) for submitting the PR.
 
   - `conversion_factors` field in `Dataset164` struct has been modified in favor of individual names for scaling factors. This change improves fields clarity. Thanks to [@JakeZw](https://github.com/Spectrum-Tec) for submitting the PR.

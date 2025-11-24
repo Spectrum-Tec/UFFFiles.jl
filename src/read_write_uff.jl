@@ -51,17 +51,16 @@ function readuff(filename::String)
 end
 
 # FileIO integration
-fileio_load(file::File{FileIO.format"UFF"}) = readuff(file.filename)
+# fileio_load(file::File{FileIO.format"UFF"}) = readuff(file.filename)
 
 """
-    writeuff(filename::String, data::Vector{UFFDataset})
+    writeuff(filename::String, data::Vector{UFFDataset}; w58b)
 
 Writes a vector of UFFDataset objects to a UFF file.
 
 **Input**
 - `filename::String`: The path to the UFF file to be written.
-- `datasets::Vector{UFFDataset}`: A vector containing the UFF datasets to be
-written.
+- `datasets::Vector{UFFDataset}`: A vector containing the UFF datasets to be written.
 - `w58b::Bool`: Optional flag to indicate if Dataset58 format must be written in binary format (default: false).
 """
 function writeuff(filename::String, datasets; w58b::Bool = false)
@@ -84,4 +83,4 @@ function writeuff(filename::String, datasets; w58b::Bool = false)
 end
 
 # FileIO integration
-fileio_save(file::File{format"UFF"}, data) = writeuff(file.filename, data)
+# fileio_save(file::File{format"UFF"}, data) = writeuff(file.filename, data)

@@ -70,8 +70,10 @@ For testing and validate the package, I used several UFF files that are publicly
 `UFFFiles.jl` has the following direct dependencies.
 
 ```julia
-Project UFFFiles v0.2.0
+Project UFFFiles v0.3.0
 Status
+  [6ef1bc8b] Scanf v0.5.4
+  [ade2ca70] Dates v1.11.0
   [de0858da] Printf v1.11.0
 ```
 :::
@@ -81,8 +83,8 @@ Status
 # Julia version and machine information
 
 ```julia
-Julia Version 1.12.1
-Commit ba1e628ee49 (2025-10-17 13:02 UTC)
+Julia Version 1.12.2
+Commit ca9b6662be4 (2025-11-20 16:25 UTC)
 Build Info:
   Official https://julialang.org release
 Platform Info:

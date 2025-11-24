@@ -58,7 +58,6 @@ A struct containing UFF Dataset 58 (Function at nodal dof) data.
     # Fields specific to Dataset58
     type::Symbol    # Data set type
     name::String    # Data set name
-    binary::Bool    # Binary or ASCII flag
     id1::String     # Record 1 - field 1
     id2::String     # Record 2 - field 1
     id3::String     # Record 3 - field 1
@@ -122,7 +121,6 @@ A struct containing UFF Dataset 58 (Function at nodal dof) data.
     data::AbstractVector        # Record 12
 
     Dataset58(
-        binary = false,
         id1 = "",
         id2 = "",
         id3 = "",
@@ -170,7 +168,7 @@ A struct containing UFF Dataset 58 (Function at nodal dof) data.
         z_axis_unit_label = "",
         abscissa = [],
         data = []
-    ) = new(:Dataset58, "Function at nodal dof", binary, id1, id2, id3, id4, id5, func_type, func_id, ver_num, load_case, resp_name, resp_node, resp_dir, ref_name, ref_node, ref_dir, ord_dtype, num_pts, abs_spacing_type, abs_min, abs_increment, zval, abs_spec_dtype, abs_len_unit_exp, abs_force_unit_exp, abs_temp_unit_exp, abs_axis_label, abs_axis_unit_label, ord_spec_dtype, ord_len_unit_exp, ord_force_unit_exp, ord_temp_unit_exp, ord_axis_label, ord_axis_unit_label, ord_denom_spec_dtype, ord_denom_len_unit_exp, ord_denom_force_unit_exp, ord_denom_temp_unit_exp, ord_denom_axis_label, ord_denom_axis_unit_label, z_spec_dtype, z_len_unit_exp, z_force_unit_exp, z_temp_unit_exp, z_axis_label, z_axis_unit_label, abscissa, data)
+    ) = new(:Dataset58, "Function at nodal dof", id1, id2, id3, id4, id5, func_type, func_id, ver_num, load_case, resp_name, resp_node, resp_dir, ref_name, ref_node, ref_dir, ord_dtype, num_pts, abs_spacing_type, abs_min, abs_increment, zval, abs_spec_dtype, abs_len_unit_exp, abs_force_unit_exp, abs_temp_unit_exp, abs_axis_label, abs_axis_unit_label, ord_spec_dtype, ord_len_unit_exp, ord_force_unit_exp, ord_temp_unit_exp, ord_axis_label, ord_axis_unit_label, ord_denom_spec_dtype, ord_denom_len_unit_exp, ord_denom_force_unit_exp, ord_denom_temp_unit_exp, ord_denom_axis_label, ord_denom_axis_unit_label, z_spec_dtype, z_len_unit_exp, z_force_unit_exp, z_temp_unit_exp, z_axis_label, z_axis_unit_label, abscissa, data)
 end
 
 
@@ -195,26 +193,34 @@ function write_dataset(io, dataset::Dataset58; w58b::Bool = false)
 
     n = length(dataset.data)
     binary_bytes =
-    if (dataset.ord_dtype == 2 && dataset.abs_spacing_type == 1)      # Case 1 - Real, Single Precision, Even Spacing
+    if (dataset.ord_dtype == 2 && dataset.abs_spacing_type == 1)
+        # Case 1 - Real, Single Precision, Even Spacing
         n*4
-    elseif (dataset.ord_dtype == 2 && dataset.abs_spacing_type == 0)  # Case 2 - Real, Single Precision, Uneven Spacing
+    elseif (dataset.ord_dtype == 2 && dataset.abs_spacing_type == 0)
+        # Case 2 - Real, Single Precision, Uneven Spacing
         2n*4
-    elseif (dataset.ord_dtype == 5 && dataset.abs_spacing_type == 1)  # Case 3 - Complex, Single Precision, Even Spacing
+    elseif (dataset.ord_dtype == 5 && dataset.abs_spacing_type == 1)
+        # Case 3 - Complex, Single Precision, Even Spacing
         2n*4
-    elseif (dataset.ord_dtype == 5 && dataset.abs_spacing_type == 0)  # Case 4 - Complex, Single Precision, Uneven Spacing
+    elseif (dataset.ord_dtype == 5 && dataset.abs_spacing_type == 0)
+        # Case 4 - Complex, Single Precision, Uneven Spacing
         3n*4
-    elseif (dataset.ord_dtype == 4 && dataset.abs_spacing_type == 1)  # Case 5 - Real, Double Precision, Even Spacing
+    elseif (dataset.ord_dtype == 4 && dataset.abs_spacing_type == 1)
+        # Case 5 - Real, Double Precision, Even Spacing
         n*8
-    elseif (dataset.ord_dtype == 4 && dataset.abs_spacing_type == 0)  # Case 6 - Real, Double Precision, Uneven Spacing
+    elseif (dataset.ord_dtype == 4 && dataset.abs_spacing_type == 0)
+        # Case 6 - Real, Double Precision, Uneven Spacing
         2n*8  # both abscissa and ordinate written in Float64
-    elseif (dataset.ord_dtype == 6 && dataset.abs_spacing_type == 1)  # Case 7 - Complex, Double Precision, Even Spacing
+    elseif (dataset.ord_dtype == 6 && dataset.abs_spacing_type == 1)
+        # Case 7 - Complex, Double Precision, Even Spacing
         2n*8
-    elseif (dataset.ord_dtype == 6 && dataset.abs_spacing_type == 0)  # Case 8 - Complex, Double Precision, Uneven Spacing
+    elseif (dataset.ord_dtype == 6 && dataset.abs_spacing_type == 0)
+        # Case 8 - Complex, Double Precision, Uneven Spacing
         3n*8  # both abscissa and ordinate written in Float64
     end
 
     # Dataset number
-    ds = if dataset.binary
+    ds = if w58b
             @sprintf("%6i%c%6i%6i%12i%12i%6i%6i%12i%12i",
                 58,             # 58
                 'b',            # lowercase b
@@ -238,7 +244,7 @@ function write_dataset(io, dataset::Dataset58; w58b::Bool = false)
 
     # Record 6: DOF Identification
     # Format: 2(I5,I10),2(1X,10A1,I10,I4)
-    r6_line = @sprintf("%5d%10d%5d%10d %-10s%10d%4d %-10s%10d%4d",
+    r6 = @sprintf("%5d%10d%5d%10d %-10s%10d%4d %-10s%10d%4d",
         dataset.func_type,
         dataset.func_id,
         dataset.ver_num,
@@ -249,62 +255,62 @@ function write_dataset(io, dataset::Dataset58; w58b::Bool = false)
         dataset.ref_name,
         dataset.ref_node,
         dataset.ref_dir)
-    println(io, r6_line)
+    println(io, r6)
 
     # Record 7: Data Form
     # Format: 3I10,3E13.5
-    r7_line = @sprintf("%10d%10d%10d%13.5E%13.5E%13.5E",
+    r7 = @sprintf("%10d%10d%10d%13.5E%13.5E%13.5E",
         dataset.ord_dtype,
         dataset.num_pts,
         dataset.abs_spacing_type,
         dataset.abs_min,
         dataset.abs_increment,
         dataset.zval)
-    println(io, r7_line)
+    println(io, r7)
 
     # Record 8: Abscissa Data Characteristics
     # Format: I10,3I5,2(1X,20A1)
-    r8_line = @sprintf("%10d%5d%5d%5d %-20s %-20s",
+    r8 = @sprintf("%10d%5d%5d%5d %-20s %-20s",
         dataset.abs_spec_dtype,
         dataset.abs_len_unit_exp,
         dataset.abs_force_unit_exp,
         dataset.abs_temp_unit_exp,
         dataset.abs_axis_label,
         dataset.abs_axis_unit_label)
-    println(io, r8_line)
+    println(io, r8)
 
     # Record 9: Ordinate Data Characteristics
     # Format: I10,3I5,2(1X,20A1)
-    r9_line = @sprintf("%10d%5d%5d%5d %-20s %-20s",
+    r9 = @sprintf("%10d%5d%5d%5d %-20s %-20s",
         dataset.ord_spec_dtype,
         dataset.ord_len_unit_exp,
         dataset.ord_force_unit_exp,
         dataset.ord_temp_unit_exp,
         dataset.ord_axis_label,
         dataset.ord_axis_unit_label)
-    println(io, r9_line)
+    println(io, r9)
 
     # Record 10: Ordinate Denominator Data Characteristics
     # Format: I10,3I5,2(1X,20A1)
-    r10_line = @sprintf("%10d%5d%5d%5d %-20s %-20s",
+    r10 = @sprintf("%10d%5d%5d%5d %-20s %-20s",
         dataset.ord_denom_spec_dtype,
         dataset.ord_denom_len_unit_exp,
         dataset.ord_denom_force_unit_exp,
         dataset.ord_denom_temp_unit_exp,
         dataset.ord_denom_axis_label,
         dataset.ord_denom_axis_unit_label)
-    println(io, r10_line)
+    println(io, r10)
 
     # Record 11: Z-axis Data Characteristics
     # Format: I10,3I5,2(1X,20A1)
-    r11_line = @sprintf("%10d%5d%5d%5d %-20s %-20s",
+    r11 = @sprintf("%10d%5d%5d%5d %-20s %-20s",
         dataset.z_spec_dtype,
         dataset.z_len_unit_exp,
         dataset.z_force_unit_exp,
         dataset.z_temp_unit_exp,
         dataset.z_axis_label,
         dataset.z_axis_unit_label)
-    println(io, r11_line)
+    println(io, r11)
 
     # Record 12: Data Values
     # Call binary or ASCII routine
