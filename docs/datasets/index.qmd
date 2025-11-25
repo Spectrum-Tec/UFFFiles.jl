@@ -13,7 +13,7 @@ As mentioned in the [Home page](../index.qmd), the UFF datasets implemented in `
 - [Dataset 15 - Nodes](dataset15.qmd)
 - [Dataset 18 - Coordinate systems](dataset18.qmd)
 - [Dataset 55 - Data at nodes](dataset55.qmd)
-- [Dataset 58 - Function at nodal DOF](dataset58.qmd)
+- [Dataset 58 & 58b- Function at nodal DOF](dataset58.qmd)
 - [Dataset 82 - Tracelines](dataset82.qmd)
 - [Dataset 151 - Header](dataset151.qmd)
 - [Dataset 164 - Units](dataset164.qmd)

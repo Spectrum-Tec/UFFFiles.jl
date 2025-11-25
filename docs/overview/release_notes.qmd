@@ -6,14 +6,17 @@ format:
     number-sections: false
 ---
 
-## v0.3.0
+## v1.0.0
 
 **Breaking changes**
 
-- Code
-  - The code has been refactored to reduce the memory footprint when parsing UFF files.
-  - The function `supported_file_extensions` has been added to list supported UFF file extensions.
-  - `readuff` and `writeuff` functions now check the file extension and throw an error if it is not supported.
+- Refactoring of the code to reduce the memory footprint when parsing UFF files.
+
+- Add `supported_file_extensions` function to list supported UFF file extensions.
+
+- Add `srdc_doc` function to access to the original documentation for supported datasets.
+
+- `readuff` and `writeuff` functions now check the file extension and throw an error if it is not supported.
 
 - Datasets
   - Add `Dataset1858`. Thanks to [@JakeZw](https://github.com/Spectrum-Tec) for submitting the PR.

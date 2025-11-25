@@ -70,7 +70,7 @@ For testing and validate the package, I used several UFF files that are publicly
 `UFFFiles.jl` has the following direct dependencies.
 
 ```julia
-Project UFFFiles v0.3.0
+Project UFFFiles v1.0.0
 Status
   [6ef1bc8b] Scanf v0.5.4
   [ade2ca70] Dates v1.11.0
