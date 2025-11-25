@@ -14,7 +14,7 @@ module UFFFiles
 
     # Helper functions
     export connectivity_matrix, dataset_type, dataset55_to_mat,
-           dataset58_to_mat, supported_datasets, supported_file_extensions
+           dataset58_to_mat, srdc_doc, supported_datasets, supported_file_extensions
 
     # Include files
     include("uff_utils.jl")
@@ -33,6 +33,7 @@ module UFFFiles
     include("datasets/dataset2411.jl")
     include("datasets/dataset2412.jl")
     include("datasets/dataset2414.jl")
+    include("datasets/doc_datasets.jl")
     include("read_write_uff.jl")
 
     # Include helper functions
