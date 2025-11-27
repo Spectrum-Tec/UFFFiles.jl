@@ -755,7 +755,7 @@ function parse_dataset58(io)
     z_axis_label = strip(z_axis_label)
     z_axis_unit_label = strip(z_axis_unit_label)
 
- # Binary Data
+ # Record 12
      if (ord_dtype == 2 && abs_spacing_type == 1)
         # Case 1 - Real, Single Precision, Even Spacing 6E13.5
         _data = Vector{Float32}(undef, num_pts)
@@ -768,7 +768,6 @@ function parse_dataset58(io)
                 _data[i+j-1] = parse(Float32, r12[(j-1)*fw+1:j*fw])
             end
         end
-
         abscissa = Float32[]
         data = _data
 
@@ -784,7 +783,6 @@ function parse_dataset58(io)
                 _data[i+j-1] = parse(Float32, r12[(j-1)*fw+1:j*fw])
             end
         end
-
         tmp = reshape(reinterpret(Float32, _data), (2, :))'
         abscissa = tmp[:, 1]
         data = tmp[:, 2]
@@ -801,7 +799,6 @@ function parse_dataset58(io)
                 _data[i+j-1] = parse(Float32, r12[(j-1)*fw+1:j*fw])
             end
         end
-
         abscissa = Float32[]
         data = reinterpret(ComplexF32, _data)
 
@@ -817,7 +814,6 @@ function parse_dataset58(io)
                 _data[i+j-1] = parse(Float32, r12[(j-1)*fw+1:j*fw])
             end
         end
-
         tmp = reshape(reinterpret(Float32, _data), (3, :))'
         abscissa = tmp[:, 1]
         data = reinterpret(ComplexF32, vec(tmp[:, 2:3]'))
@@ -834,8 +830,7 @@ function parse_dataset58(io)
                 _data[i+j-1] = parse(Float64, r12[(j-1)*fw+1:j*fw])
             end
         end
-
-        abscissa = Float64[]
+        abscissa = Float32[]
         data = reinterpret(Float64, _data)
 
     elseif (ord_dtype == 4 && abs_spacing_type == 0)
@@ -864,7 +859,6 @@ function parse_dataset58(io)
                 _data[i+j-1] = parse(Float64, r12[(j-1)*fw+1:j*fw])
             end
         end
-
         abscissa = Float32[]
         data = reinterpret(ComplexF64, _data)
 

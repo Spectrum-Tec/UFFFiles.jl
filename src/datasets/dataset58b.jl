@@ -154,7 +154,7 @@ function parse_dataset58b(io)
     z_axis_label = strip(z_axis_label)
     z_axis_unit_label = strip(z_axis_unit_label)
 
-    # Record 12
+    # Binary Data
     _data = read(io, binary_bytes)
 
     # Convert UInt8 to Values
