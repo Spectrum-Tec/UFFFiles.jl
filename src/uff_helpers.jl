@@ -142,11 +142,11 @@ function dataset58_to_mat(dataset)
 
     xtype, dtype = if dataset[1].ord_dtype == 2
             Float32, Float32
-    elseif ord_dtype == 4
+    elseif dataset[1].ord_dtype == 4
             Float64, Float64
-    elseif ord_dtype == 5
+    elseif dataset[1].ord_dtype == 5
             Float32, ComplexF32
-    elseif ord_dtype == 6
+    elseif dataset[1].ord_dtype == 6
             Float64, ComplexF64
     end
 
