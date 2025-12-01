@@ -135,13 +135,13 @@ Universal Dataset Number: 2412
 
     76 Membrane Cubic Quadrilateral
 
-    81 Axisymetric Solid Linear Triangle
+    81 Axisymmetric Solid Linear Triangle
 
-    82 Axisymetric Solid Parabolic Triangle
+    82 Axisymmetric Solid Parabolic Triangle
 
-    84 Axisymetric Solid Linear Quadrilateral
+    84 Axisymmetric Solid Linear Quadrilateral
 
-    85 Axisymetric Solid Parabolic Quadrilateral
+    85 Axisymmetric Solid Parabolic Quadrilateral
 
     91 Thin Shell Linear Triangle
 
@@ -205,9 +205,9 @@ Universal Dataset Number: 2412
 
     161 Lumped Mass
 
-    171 Axisymetric Linear Shell
+    171 Axisymmetric Linear Shell
 
-    172 Axisymetric Parabolic Shell
+    172 Axisymmetric Parabolic Shell
 
     181 Constraint
 
@@ -273,7 +273,7 @@ function parse_dataset2412(io)
             r2 = readline(io)
             beam_orient, cross_sec_fore, cross_sec_aft = @scanf(r2, "%10d%10d%10d", Int, Int, Int)[2:end]
             push!(beam_info, [beam_orient, cross_sec_fore, cross_sec_aft])
-          
+
             # Read Record 3 (connectivity) - FORMAT(8I10)
             r3 = readline(io)
             nodes = @scanf(r3, "%10d%10d%10d%10d%10d%10d%10d%10d", Int, Int, Int, Int, Int, Int, Int, Int)[2:end]
